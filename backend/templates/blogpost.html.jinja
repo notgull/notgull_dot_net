@@ -1,0 +1,21 @@
+{% extends "base" %}
+
+{% block header %}
+{{ super() }}
+<p id="author">By {{ author_name }}</p>
+<p id="date">Posted On {{ created_at }}</p>
+{% endblock %}
+
+{% block content %}
+<div id="blogcontent">
+{{ body }}
+</div>
+
+<div id="taglist">
+  <ul>
+    {% for tag in taglist %}
+      <li>{{ tag }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

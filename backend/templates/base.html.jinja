@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+      <title>{{ title }}</title>
+      <meta charset="UTF-8" />
+      <meta name="description" content="We've spent so much time chasing suns, we lost sight of what we came for." />
+      <meta name="keywords" content="creative,scp,notgull" />
+      <meta name="author" content="John Notgull" />
+      <script type="text/javascript">
+        'use strict';
+
+        window.constants = {};
+
+        // set up some global variables
+        window.constants.auth_url = "{{ auth_url }}";
+        window.constants.api_url = "{{ api_url }}";
+      </script>
+    
+      {% for js_package in ["axios","react","react-dom","notgull"] %}
+        <script
+          type="text/javascript"
+          src="{{ static_url }}/js/{{ js_package }}.js"></script>
+      {% endfor %}
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+    <div id="header">
+      <h1><a href="/">notgull.net</a></h1>
+      <h2>The world's #1 source of notgull</h2>
+    </div>
+    <div id="navbar">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Blog</a></li>
+      </ul>
+    </div>
+    <div id="content-wrapper">
+      <div id="header">
+        {% block header %}
+          <h1>{{ title }}</h1>
+        {% endblock %}
+      </div>
+      <div id="content">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+    {% endblock %}
+  </body>
+</html>

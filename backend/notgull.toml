@@ -1,0 +1,7 @@
+hostname = "127.0.0.1"
+port = 8199
+template_path = "templates"
+
+[tls]
+private_key = "notgull.rsa"
+public_key = "notgull.pem"

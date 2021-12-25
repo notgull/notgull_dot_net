@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "noImplicitAny": true,
+      "module": "es6",
+      "target": "es3",
+      "jsx": "react",
+      "strict": true,
+      "strictPropertyInitialization": false,
+      "allowSyntheticDefaultImports": true,
+      "allowJs": false,
+      "moduleResolution": "node",
+      "lib": ["dom"]
+    }
+  }  
