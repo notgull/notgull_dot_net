@@ -193,6 +193,8 @@ impl Database for MockDatabase {
             url,
             body,
             author_id,
+            skip,
+            count,
         } = filter;
 
         Ok(self
@@ -219,6 +221,8 @@ impl Database for MockDatabase {
                 }
                 cond
             })
+            .skip(skip as usize)
+            .take(count as usize)
             .cloned()
             .collect())
     }

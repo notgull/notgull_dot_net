@@ -12,9 +12,12 @@ mod serve;
 
 pub mod api;
 pub mod blog;
+#[path = "csrf.rs"]
+pub mod csrf_integration;
 pub mod database;
 pub mod markdown;
 pub mod models;
+pub mod pagerender;
 pub mod schema;
 pub mod templates;
 
@@ -54,6 +57,7 @@ async fn entry() {
     }
 
     markdown::initialize_markdown();
+    csrf_integration::initialize_csrf(&cfg);
 
     // load the database
     if let Err(e) = database::initialize_database() {
@@ -77,6 +81,8 @@ pub enum PageRenderError {
     Tera(#[from] tera::Error),
     #[error("{0}")]
     Database(#[from] DatabaseError),
+    #[error("{0}")]
+    Csrf(#[from] csrf_integration::CsrfError),
 }
 
 impl warp::reject::Reject for PageRenderError {}

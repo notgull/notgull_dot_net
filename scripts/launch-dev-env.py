@@ -107,21 +107,39 @@ def uploadPublic(s3_client):
 
             log(f"Uploaded file {file_path}")
 
+# run npx gulp in the frontend dir
+def runNpxGulp():
+    bpath = lookForFile("frontend", "public")
+    return sp.Popen(["npx", "gulp"], cwd=bpath)
+
 def main():
-    with tempfile.TemporaryDirectory("ndntemp") as tempdir:
-      dc_process = dockerCompose(tempdir)
-      waitForBytes(dc_process, b"Ready.")
+    log("Running `npx gulp` to build frontend")
+    gulp_process = runNpxGulp()
 
-      # now that we know we're ready, start uploading files
-      s3_client = connectS3()
-      uploadPublic(s3_client)
+    try:
+        with tempfile.TemporaryDirectory("ndntemp") as tempdir:
+            dc_process = dockerCompose(tempdir)
+            waitForBytes(dc_process, b"Ready.")
 
-      try:
-        input("Press enter to kill docker-compose")
+            # make sure npx gulp is done before we upload public files
+            gulp_process.wait()
+            if gulp_process.returncode != 0:
+                dc_process.terminate()
+                raise Exception("Failed to run gulp")
 
-      finally:
-        dc_process.terminate()
-        dc_process.wait()
+            # now that we know we're ready, start uploading files
+            s3_client = connectS3()
+            uploadPublic(s3_client)
+
+            try:
+                input("Press enter to kill docker-compose")
+
+            finally:
+                dc_process.terminate()
+                dc_process.wait()
+    except PermissionError as e:
+        # eat this error
+        pass
 
 if __name__ == "__main__":
     main()

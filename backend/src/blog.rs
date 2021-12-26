@@ -1,18 +1,60 @@
 // GNU AGPL v3 License
 
-use crate::{markdown, models::Blogpost, templates, Database, PageRenderError};
+use crate::{markdown, models::Blogpost, pagerender, templates, Database, PageRenderError};
 use chrono::NaiveDateTime;
-use futures_util::TryFutureExt;
+use futures_util::{future, TryFutureExt};
 use std::sync::Arc;
-use warp::{Filter, Reply};
+use warp::{
+    reply::{html, with_header},
+    Filter, Reply,
+};
+
+#[inline]
+pub fn blog(
+) -> impl Filter<Extract = (impl Reply,), Error = warp::Rejection> + Clone + Send + Sync + 'static {
+    warp::path("blog").and(view_blogpost().or(list_blogpost()))
+}
+
+#[inline]
+pub fn list_blogpost(
+) -> impl Filter<Extract = (impl Reply,), Error = warp::Rejection> + Clone + Send + Sync + 'static {
+    warp::path::end()
+        .and(warp::get())
+        .map(|| Title { title: "Blog" })
+        .and(pagerender::page_render_loader::<true>())
+        .and_then(|data, mut state: pagerender::PageRenderState| {
+            future::ready({
+                let mut options = templates::TemplateOptions::default();
+                options.csrf_token = Some(state.csrf_token());
+
+                templates::template("bloglist", data, options)
+                    .map_err(|e| warp::reject::custom(PageRenderError::from(e)))
+                    .map(move |t| (t, state))
+            })
+        })
+        .untuple_one()
+        .map(|res: String, mut state: pagerender::PageRenderState| {
+            with_header(
+                html(res),
+                "Set-Cookie",
+                format!("csrf_cookie={}", state.csrf_cookie()),
+            )
+        })
+}
+
+#[derive(serde::Serialize)]
+struct Title<'a> {
+    title: &'a str,
+}
 
 #[inline]
 pub fn view_blogpost(
 ) -> impl Filter<Extract = (impl Reply,), Error = warp::Rejection> + Clone + Send + Sync + 'static {
-    warp::path!("blog" / String)
+    warp::path!(String)
         .and(warp::get())
         .and(crate::with_database())
-        .and_then(|url, database| {
+        .and(pagerender::page_render_loader::<false>())
+        .and_then(|url, database, _| {
             view_blogpost_inner(url, database).map_err(|e| warp::reject::custom(e))
         })
 }
@@ -26,7 +68,7 @@ async fn view_blogpost_inner(
     let (blogpost, user) = database.get_blogpost_and_user_by_url(url).await?;
 
     // format
-    blogpost.render_to_html(&user.name).map(warp::reply::html)
+    blogpost.render_to_html(&user.name).map(html)
 }
 
 impl Blogpost {
@@ -110,7 +152,7 @@ mod tests {
 
         let value = warp::test::request()
             .method("GET")
-            .path("/blog/chasing-suns")
+            .path("/chasing-suns")
             .filter(&filter)
             .await
             .unwrap()

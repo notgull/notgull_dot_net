@@ -1,6 +1,7 @@
 // GNU AGPL v3 License
 
 use std::{
+    ffi::CString,
     io,
     net::IpAddr,
     path::{Path, PathBuf},
@@ -15,6 +16,7 @@ pub struct Config {
     pub hostname: IpAddr,
     pub port: u16,
     pub template_path: PathBuf,
+    pub csrf_key: CString,
     pub tls: TlsDetails,
     pub urls: Urls,
 }

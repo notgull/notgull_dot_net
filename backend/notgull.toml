@@ -5,3 +5,8 @@ template_path = "templates"
 [tls]
 private_key = "notgull.rsa"
 public_key = "notgull.pem"
+
+[urls]
+api_url = "https://localhost:8199/api"
+static_url = "http://localhost:4566/notgull"
+auth_url = "http://test.test/auth"

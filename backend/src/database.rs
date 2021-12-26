@@ -143,6 +143,8 @@ impl Database for SqlDatabase {
             url,
             body,
             author_id,
+            skip,
+            count,
         } = filter;
         let [stitle, stags, surl, sbody] =
             [title, tags, url, body].map(|t| t.map(|t| format!("%{}%", t)));
@@ -171,7 +173,11 @@ impl Database for SqlDatabase {
                 query = query.filter(author_id.eq(sauthor_id));
             }
 
-            let posts = query.order_by(created_at.desc()).load(&conn)?;
+            let posts = query
+                .order_by(created_at.desc())
+                .offset(skip as i64)
+                .limit(count as i64)
+                .load(&conn)?;
             Ok(posts)
         })
         .await

@@ -67,6 +67,16 @@ pub struct BlogpostFilter {
     pub url: Option<String>,
     pub body: Option<String>,
     pub author_id: Option<i32>,
+
+    #[serde(default)]
+    pub skip: u64,
+    #[serde(default = "default_count")]
+    pub count: u64,
+}
+
+#[inline]
+const fn default_count() -> u64 {
+    25
 }
 
 #[derive(Default, Deserialize, AsChangeset)]

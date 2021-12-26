@@ -11,6 +11,6 @@ pub fn routes(
 ) -> impl Filter<Extract = (impl Reply,), Error = Infallible> + Clone + Send + Sync + 'static {
     // our only route, for now
     api::api()
-        .or(blog::view_blogpost())
+        .or(blog::blog())
         .or(warp::any().map(|| StatusCode::NOT_FOUND))
 }

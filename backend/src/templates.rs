@@ -1,6 +1,6 @@
 // GNU AGPL v3 License
 
-use crate::{Urls, Config};
+use crate::{Config, Urls};
 use arc_swap::ArcSwap;
 use notify::Watcher;
 use once_cell::sync::OnceCell;
@@ -24,15 +24,17 @@ struct TemplateState {
 
 #[derive(Default)]
 pub struct TemplateOptions {
-    _nothing: (),
+    pub csrf_token: Option<String>,
 }
 
 #[inline]
 pub fn template<T: serde::Serialize>(
     name: &str,
     data: T,
-    _options: TemplateOptions,
+    options: TemplateOptions,
 ) -> Result<String, Error> {
+    let TemplateOptions { csrf_token } = options;
+
     // load the global state
     let templates = TEMPLATES
         .get()
@@ -45,6 +47,11 @@ pub fn template<T: serde::Serialize>(
     context.insert("auth_url", &templates.urls.auth_url);
     context.insert("api_url", &templates.urls.api_url);
     context.insert("static_url", &templates.urls.static_url);
+
+    // add csrf token
+    if let Some(csrf_token) = csrf_token {
+        context.insert("csrf_token", &csrf_token);
+    }
 
     // preform the templating
     let templates = templates.templates.load();
