@@ -1,6 +1,7 @@
 hostname = "127.0.0.1"
 port = 8199
 template_path = "templates"
+csrf_key = "We spent so much time chasing suns, we lost sight..."
 
 [tls]
 private_key = "notgull.rsa"

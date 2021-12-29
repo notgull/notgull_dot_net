@@ -15,6 +15,10 @@
         // set up some global variables
         window.constants.auth_url = "{{ auth_url }}";
         window.constants.api_url = "{{ api_url }}";
+
+        {% if csrf_token %}
+          window.constants.csrf_token = "{{ csrf_token }}";
+        {% endif %}
       </script>
     
       {% for js_package in ["axios","react","react-dom","notgull"] %}

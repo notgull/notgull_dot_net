@@ -9,6 +9,7 @@ declare global {
 export interface Consts {
     api_url: string,
     auth_url: string,
+    csrf_token?: string,
 };
 
 const CONSTS: Consts = window.constants; 
