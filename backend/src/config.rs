@@ -19,6 +19,16 @@ pub struct Config {
     pub csrf_key: CString,
     pub tls: TlsDetails,
     pub urls: Urls,
+    pub oauth2: Oauth2Details,
+}
+
+#[derive(serde::Deserialize)]
+pub struct Oauth2Details {
+    pub client_id: String,
+    pub client_secret: String,
+    pub auth_url: String,
+    pub token_url: String,
+    pub redirect_url: String,
 }
 
 #[derive(serde::Deserialize)]
@@ -32,6 +42,7 @@ pub struct Urls {
     pub static_url: String,
     pub api_url: String,
     pub auth_url: String,
+    pub web_url: String,
 }
 
 impl Config {

@@ -24,7 +24,7 @@ struct TemplateState {
 
 #[derive(Default)]
 pub struct TemplateOptions {
-    pub csrf_token: Option<String>,
+    pub csrf_tokens: Option<(String, String)>,
 }
 
 #[inline]
@@ -33,7 +33,7 @@ pub fn template<T: serde::Serialize>(
     data: T,
     options: TemplateOptions,
 ) -> Result<String, Error> {
-    let TemplateOptions { csrf_token } = options;
+    let TemplateOptions { csrf_tokens } = options;
 
     // load the global state
     let templates = TEMPLATES
@@ -47,10 +47,12 @@ pub fn template<T: serde::Serialize>(
     context.insert("auth_url", &templates.urls.auth_url);
     context.insert("api_url", &templates.urls.api_url);
     context.insert("static_url", &templates.urls.static_url);
+    context.insert("web_url", &templates.urls.web_url);
 
     // add csrf token
-    if let Some(csrf_token) = csrf_token {
+    if let Some((csrf_token, csrf_cookie)) = csrf_tokens {
         context.insert("csrf_token", &csrf_token);
+        context.insert("csrf_cookie", &csrf_cookie);
     }
 
     // preform the templating
@@ -199,6 +201,7 @@ pub fn initialize_test_templates() -> Result<(), Error> {
             static_url: "https://test.static".into(),
             api_url: "https://test.api/api".into(),
             auth_url: "https://test.auth".into(),
+            web_url: "https://test.web".into(),
         },
     });
 

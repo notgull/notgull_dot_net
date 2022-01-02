@@ -8,6 +8,14 @@ private_key = "notgull.rsa"
 public_key = "notgull.pem"
 
 [urls]
-api_url = "https://localhost:8199/api"
-static_url = "http://localhost:4566/notgull"
+api_url = "https://127.0.0.1:8199/api"
+static_url = "http://127.0.0.1:4566/notgull"
 auth_url = "http://test.test/auth"
+web_url = "https://127.0.0.1:8199"
+
+[oauth2]
+client_id = "ndndotnet"
+client_secret = "ndndotsecret"
+auth_url = "http://127.0.0.1:4444/oauth2/auth"
+token_url = "http://127.0.0.1:4444/oauth2/token"
+redirect_url = "https://127.0.0.1:8199/callback"

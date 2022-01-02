@@ -1,11 +1,13 @@
 // GNU AGPL v3 License
 
 use crate::{
+    auth::{self, with_session, Permissions, Session},
     csrf_integration::{self, CsrfError},
     models::Model,
     query::{with_database, Database, DatabaseError},
 };
 use bytes::Bytes;
+use dashmap::mapref::one::Ref;
 use futures_util::future;
 use serde::{de::DeserializeOwned, Serialize};
 use std::sync::Arc;
@@ -68,27 +70,30 @@ fn loader_filter() -> impl Filter<Extract = LoaderData<impl Database>, Error = w
        + Send
        + Sync
        + 'static {
-    warp::get()
-        .and(warp::query::raw().map(|query: String| {
-            let bytes = query.into_bytes();
-            Bytes::from(bytes)
-        }))
-        .or(warp::body::bytes())
-        .unify()
-        .and(warp::cookie::optional::<String>("csrf_cookie"))
-        .and_then(|data: Bytes, cookie: Option<String>| {
-            future::ready({
-                match cookie {
-                    None => Err(reject(ModelError::from(CsrfError::CookieNotFound))),
-                    Some(cookie) => csrf_integration::decode_and_verify_csrf(data, cookie)
-                        .map_err(|e| reject(ModelError::from(e))),
-                }
-            })
-        })
+    csrf_integration::check_csrf::<ModelError>()
         .and(with_database())
+        .and(
+            with_session().map(|s: Option<Ref<'static, String, Session>>| match s {
+                Some(s) => s.roles,
+                None => Permissions(0b0),
+            }),
+        )
 }
 
-type LoaderData<D> = (Bytes, Arc<D>);
+#[inline]
+fn check_permsissions<T>(
+    data: T,
+    user_perms: Permissions,
+    required_perms: Permissions,
+) -> Result<T, warp::Rejection> {
+    if required_perms.applies_to(user_perms) {
+        Ok(data)
+    } else {
+        Err(reject(ModelError::PermissionDenied))
+    }
+}
+
+type LoaderData<D> = (Bytes, Arc<D>, Permissions);
 
 /// List the model based on a filter.
 #[inline]
@@ -103,6 +108,11 @@ where
     warp::path::end()
         .and(warp::get())
         .and(loader.clone())
+        .and(warp::any().map(|| M::LIST_PERMS))
+        .and_then(|body: Bytes, db, uperms, rperms| {
+            future::ready({ check_permsissions((body, db), uperms, rperms) })
+        })
+        .untuple_one()
         .and_then(|body: Bytes, db| {
             future::ready({
                 let filters = serde_urlencoded::from_bytes::<M::ListFilter>(&body);
@@ -133,7 +143,12 @@ where
     warp::path!(i32)
         .and(warp::get())
         .and(loader.clone())
-        .and_then(|id, _, db: Arc<_>| async move {
+        .and(warp::any().map(|| M::GET_PERMS))
+        .and_then(|id, _, db, uperms, rperms| {
+            future::ready({ check_permsissions((id, db), uperms, rperms) })
+        })
+        .untuple_one()
+        .and_then(|id, db: Arc<_>| async move {
             M::get(&*db, id)
                 .await
                 .map_err(|e| reject(ModelError::from(e)))
@@ -154,6 +169,11 @@ where
     warp::path::end()
         .and(warp::post())
         .and(loader.clone())
+        .and(warp::any().map(|| M::CREATE_PERMS))
+        .and_then(|body: Bytes, db, uperms, rperms| {
+            future::ready({ check_permsissions((body, db), uperms, rperms) })
+        })
+        .untuple_one()
         .and_then(|body: Bytes, db| {
             future::ready({
                 let new = serde_json::from_slice::<M::NewInstance>(&body);
@@ -187,6 +207,11 @@ where
     warp::path!(i32)
         .and(warp::patch())
         .and(loader.clone())
+        .and(warp::any().map(|| M::UPDATE_PERMS))
+        .and_then(|id, body: Bytes, db, uperms, rperms| {
+            future::ready({ check_permsissions((id, body, db), uperms, rperms) })
+        })
+        .untuple_one()
         .and_then(|id, body: Bytes, db| {
             future::ready({
                 let changes = serde_json::from_slice::<M::UpdateInstance>(&body);
@@ -215,7 +240,12 @@ where
     warp::path!(i32)
         .and(warp::delete())
         .and(loader.clone())
-        .and_then(|id, _, db: Arc<_>| async move {
+        .and(warp::any().map(|| M::DELETE_PERMS))
+        .and_then(|id: i32, _, db, uperms, rperms| {
+            future::ready({ check_permsissions((id, db), uperms, rperms) })
+        })
+        .untuple_one()
+        .and_then(|id, db: Arc<_>| async move {
             M::delete(&*db, id)
                 .await
                 .map_err(|e| reject(ModelError::from(e)))
@@ -245,6 +275,8 @@ enum ModelError {
     Database(#[from] DatabaseError),
     #[error("{0}")]
     Csrf(#[from] csrf_integration::CsrfError),
+    #[error("User is unable to access resource")]
+    PermissionDenied,
 }
 
 impl ModelError {
@@ -267,6 +299,7 @@ impl ModelError {
                 "An SQL error occurred during processing",
             ),
             ModelError::Csrf(..) => (StatusCode::BAD_REQUEST, "CSRF verification failed"),
+            ModelError::PermissionDenied => (StatusCode::UNAUTHORIZED, "Permission denied"),
         }
     }
 }
@@ -280,6 +313,9 @@ mod tests {
         IdWrapper,
     };
     use crate::{
+        auth::{
+            fake_access_token, fake_access_token_fewer_perms, initialize_auth_test, Permissions,
+        },
         csrf_integration::{self, EncryptedCsrfPair},
         models::{Blogpost, Model},
         query::{with_database, Database, DatabaseError},
@@ -295,9 +331,9 @@ mod tests {
     };
 
     #[inline]
-    fn url_encode(s: String) -> String {
+    fn url_encode<S: Into<String>>(s: S) -> String {
         use percent_encoding::NON_ALPHANUMERIC;
-        percent_encoding::percent_encode(s.as_bytes(), NON_ALPHANUMERIC).to_string()
+        percent_encoding::percent_encode(s.into().as_bytes(), NON_ALPHANUMERIC).to_string()
     }
 
     #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -322,6 +358,12 @@ mod tests {
 
     #[async_trait::async_trait]
     impl Model for Dummy {
+        const GET_PERMS: Permissions = Permissions(0b1);
+        const LIST_PERMS: Permissions = Permissions(0b1);
+        const CREATE_PERMS: Permissions = Permissions(0b1);
+        const UPDATE_PERMS: Permissions = Permissions(0b1);
+        const DELETE_PERMS: Permissions = Permissions(0b1);
+
         type ListFilter = DummyFilter;
         type NewInstance = NewDummy;
         type UpdateInstance = DummyChanges;
@@ -397,12 +439,18 @@ mod tests {
     #[tokio::test]
     async fn list_no_filter() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let list = list_filter::<Dummy, _, _>(&loader_filter());
         let value = warp::test::request()
-            .path(&format!("/?csrf_token={}", url_encode(token)))
+            .path(&format!(
+                "/?csrf_token={}&csrf_cookie={}",
+                url_encode(token),
+                url_encode(cookie),
+            ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&list)
             .await
             .unwrap()
@@ -432,12 +480,19 @@ mod tests {
     #[tokio::test]
     async fn list_filtered() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let list = list_filter::<Dummy, _, _>(&loader_filter());
         let value = warp::test::request()
-            .path(&format!("/?data=foobar&csrf_token={}", url_encode(token)))
+            .path(&format!(
+                "/?data=foobar&csrf_token={}&csrf_cookie={}&access_token={}",
+                url_encode(token),
+                url_encode(cookie),
+                url_encode(tok.to_string())
+            ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&list)
             .await
             .unwrap()
@@ -467,15 +522,18 @@ mod tests {
     #[tokio::test]
     async fn list_filter_bytes_unmolested() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let list = list_filter::<Dummy, _, _>(&loader_filter());
         let value = warp::test::request()
             .path(&format!(
-                "/?irrelevant=foobar&csrf_token={}",
-                url_encode(token)
+                "/?irrelevant=foobar&csrf_token={}&csrf_cookie={}",
+                url_encode(token),
+                url_encode(cookie),
             ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&list)
             .await
             .unwrap()
@@ -505,12 +563,18 @@ mod tests {
     #[tokio::test]
     async fn get() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let get = get_filter::<Dummy, _, _>(&loader_filter());
         let value = warp::test::request()
-            .path(&format!("/1?csrf_token={}", url_encode(token)))
+            .path(&format!(
+                "/1?csrf_token={}&csrf_cookie={}",
+                url_encode(token),
+                url_encode(cookie)
+            ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&get)
             .await
             .unwrap()
@@ -527,12 +591,18 @@ mod tests {
     #[tokio::test]
     async fn get_not_found() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let get = super::model::<Dummy>("dummy");
         let value = warp::test::request()
-            .path(&format!("/dummy/2?csrf_token={}", url_encode(token)))
+            .path(&format!(
+                "/dummy/2?csrf_token={}&csrf_cookie={}",
+                url_encode(token),
+                url_encode(cookie)
+            ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&get)
             .await
             .unwrap()
@@ -555,14 +625,19 @@ mod tests {
     #[tokio::test]
     async fn create() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let create = create_filter::<Dummy, _, _>(&loader_filter());
-        let body = format!(r#"{{"data":"create()","csrf_token":"{}"}}"#, token);
+        let body = format!(
+            r#"{{"data":"create()","csrf_token":"{}","csrf_cookie":"{}"}}"#,
+            token, cookie
+        );
         let value = warp::test::request()
             .path("/")
             .method("POST")
             .body(body)
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&create)
             .await
             .unwrap()
@@ -584,14 +659,19 @@ mod tests {
     #[tokio::test]
     async fn update() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let update = update_filter::<Dummy, _, _>(&loader_filter());
-        let body = format!(r#"{{"data":"update()","csrf_token":"{}"}}"#, token);
+        let body = format!(
+            r#"{{"data":"update()","csrf_token":"{}","csrf_cookie":"{}","access_token":"{}"}}"#,
+            token, cookie, tok
+        );
         let value = warp::test::request()
             .path("/1")
             .method("PATCH")
             .body(body)
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&update)
             .await
             .unwrap()
@@ -603,14 +683,19 @@ mod tests {
     #[tokio::test]
     async fn update_partial() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let update = update_filter::<Dummy, _, _>(&loader_filter());
-        let body = format!(r#"{{"csrf_token":"{}"}}"#, token);
+        let body = format!(
+            r#"{{"csrf_token":"{}","csrf_cookie":"{}","access_token":"{}"}}"#,
+            token, cookie, tok
+        );
         let value = warp::test::request()
             .path("/1")
             .method("PATCH")
             .body(body)
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&update)
             .await
             .unwrap()
@@ -622,13 +707,18 @@ mod tests {
     #[tokio::test]
     async fn delete() {
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let delete = delete_filter::<Dummy, _, _>(&loader_filter());
-        let body = format!(r#"{{"csrf_token":"{}"}}"#, token);
+        let body = format!(
+            r#"{{"csrf_token":"{}","csrf_cookie":"{}","access_token":"{}"}}"#,
+            token, cookie, tok
+        );
         let value = warp::test::request()
             .path("/1")
             .method("DELETE")
             .body(body)
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&delete)
             .await
             .unwrap()
@@ -640,12 +730,18 @@ mod tests {
     #[tokio::test]
     async fn blogpost_list() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let model_filter = super::model::<Blogpost>("tbp");
         let value = warp::test::request()
-            .path(&format!("/tbp?csrf_token={}", url_encode(token)))
+            .path(&format!(
+                "/tbp?csrf_token={}&csrf_cookie={}&access_token={}",
+                url_encode(token),
+                url_encode(cookie),
+                url_encode(tok)
+            ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
             .filter(&model_filter)
             .await
             .unwrap()
@@ -662,17 +758,21 @@ mod tests {
     #[tokio::test]
     async fn blogpost_get() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let model_filter = super::model::<Blogpost>("tbp");
         for (id, title) in [(1, "Chasing Suns"), (2, "How to make a website")] {
             let value = warp::test::request()
                 .path(&format!(
-                    "/tbp/{}?csrf_token={}",
+                    "/tbp/{}?csrf_token={}&csrf_cookie={}&access_token={}",
                     id,
-                    url_encode(token.clone())
+                    url_encode(token.clone()),
+                    url_encode(cookie.clone()),
+                    url_encode(tok),
                 ))
                 .method("GET")
-                .header("Cookie", format!("csrf_cookie={}", cookie))
+                .header("Cookie", format!("access_token={}", tok))
                 .filter(&model_filter)
                 .await
                 .unwrap()
@@ -689,12 +789,19 @@ mod tests {
     #[tokio::test]
     async fn blogpost_get_not_found() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let model_filter = super::model::<Blogpost>("tbp");
         let value = warp::test::request()
-            .path(&format!("/tbp/3?csrf_token={}", url_encode(token)))
+            .path(&format!(
+                "/tbp/3?csrf_token={}&csrf_cookie={}&access_token={}",
+                url_encode(token),
+                url_encode(cookie),
+                url_encode(tok)
+            ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&model_filter)
             .await
             .unwrap()
@@ -717,6 +824,8 @@ mod tests {
     #[tokio::test]
     async fn blogpost_create() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let model_filter = super::model::<Blogpost>("tbp");
         let body = format!(
@@ -726,31 +835,39 @@ mod tests {
                 "url":"test3",
                 "body":"test4",
                 "author_id":1,
-                "csrf_token":"{}"
+                "csrf_token":"{}",
+                "csrf_cookie":"{}"
             }}"#,
-            &token
+            &token, &cookie,
         );
         let value = warp::test::request()
             .path("/tbp/")
             .method("POST")
-            .header("Cookie", format!("csrf_cookie={}", &cookie))
             .body(body)
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&model_filter)
             .await
             .unwrap()
             .into_response();
 
-        assert_eq!(value.status(), StatusCode::CREATED);
-
-        let value = to_bytes(value.into_body()).await.unwrap();
-        let IdWrapper { id } = serde_json::from_slice(&value).unwrap();
+        let value = String::from_utf8(to_bytes(value.into_body()).await.unwrap().to_vec()).unwrap();
+        if value.contains("error") {
+            panic!("{}", value);
+        }
+        let IdWrapper { id } = serde_json::from_str(&value).unwrap();
 
         assert_eq!(id, 3);
 
         let value = warp::test::request()
-            .path(&format!("/tbp/{}?csrf_token={}", id, url_encode(token)))
+            .path(&format!(
+                "/tbp/{}?csrf_token={}&csrf_cookie={}&access_token={}",
+                id,
+                url_encode(token),
+                url_encode(cookie),
+                url_encode(tok),
+            ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&model_filter)
             .await
             .unwrap()
@@ -767,20 +884,24 @@ mod tests {
     #[tokio::test]
     async fn blogpost_update() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let model_filter = super::model::<Blogpost>("tbp");
         let body = format!(
             r#"{{
                 "title":"Breaking Bones",
-                "csrf_token":"{}"
+                "csrf_token":"{}",
+                "csrf_cookie":"{}",
+                "access_token":"{}"
             }}"#,
-            &token
+            &token, &cookie, tok
         );
         let value = warp::test::request()
             .path("/tbp/1")
             .method("PATCH")
             .body(body)
-            .header("Cookie", format!("csrf_cookie={}", &cookie))
+            .header("Cookie", format!("access_token={}", tok))
             .filter(&model_filter)
             .await
             .unwrap()
@@ -789,9 +910,13 @@ mod tests {
         assert_eq!(value.status(), StatusCode::NO_CONTENT);
 
         let value = warp::test::request()
-            .path(&format!("/tbp/1?csrf_token={}", url_encode(token)))
+            .path(&format!(
+                "/tbp/1?csrf_token={}&csrf_cookie={}&access_token={}",
+                url_encode(token),
+                url_encode(cookie),
+                url_encode(tok)
+            ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
             .filter(&model_filter)
             .await
             .unwrap()
@@ -808,14 +933,19 @@ mod tests {
     #[tokio::test]
     async fn blogpost_delete() {
         csrf_integration::initialize_csrf_test();
+        initialize_auth_test();
+        let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         let model_filter = super::model::<Blogpost>("tbp");
-        let body = format!(r#"{{"csrf_token":"{}"}}"#, &token);
+        let body = format!(
+            r#"{{"csrf_token":"{}","csrf_cookie":"{}","access_token":"{}"}}"#,
+            &token, &cookie, tok
+        );
         let value = warp::test::request()
             .path("/tbp/1")
             .method("DELETE")
+            .header("Cookie", format!("access_token={}", tok))
             .body(body)
-            .header("Cookie", format!("csrf_cookie={}", &cookie))
             .filter(&model_filter)
             .await
             .unwrap()
@@ -824,9 +954,13 @@ mod tests {
         assert_eq!(value.status(), StatusCode::NO_CONTENT);
 
         let value = warp::test::request()
-            .path(&format!("/tbp/1?csrf_token={}", url_encode(token)))
+            .path(&format!(
+                "/tbp/1?csrf_token={}&csrf_cookie={}&access_token={}",
+                url_encode(token),
+                url_encode(cookie),
+                url_encode(tok)
+            ))
             .method("GET")
-            .header("Cookie", format!("csrf_cookie={}", cookie))
             .filter(&model_filter)
             .await
             .unwrap()

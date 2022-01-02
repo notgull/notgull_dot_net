@@ -18,37 +18,25 @@ pub fn page_render_loader<const DO_CSRF: bool>(
                 match csrf_integration::generate_csrf_pair() {
                     Err(e) => Err(reject(PageRenderError::from(e))),
                     Ok(EncryptedCsrfPair { token, cookie }) => Ok(PageRenderState {
-                        csrf_token: Some(token),
-                        csrf_cookie: Some(cookie),
+                        csrf_tokens: Some((token, cookie)),
                     }),
                 }
             } else {
-                Ok(PageRenderState {
-                    csrf_token: None,
-                    csrf_cookie: None,
-                })
+                Ok(PageRenderState { csrf_tokens: None })
             }
         })
     })
 }
 
 pub struct PageRenderState {
-    csrf_token: Option<String>,
-    csrf_cookie: Option<String>,
+    csrf_tokens: Option<(String, String)>,
 }
 
 impl PageRenderState {
     #[inline]
-    pub fn csrf_token(&mut self) -> String {
-        self.csrf_token
+    pub fn csrf_tokens(&mut self) -> (String, String) {
+        self.csrf_tokens
             .take()
             .expect("`csrf_token` has already been taken")
-    }
-
-    #[inline]
-    pub fn csrf_cookie(&mut self) -> String {
-        self.csrf_cookie
-            .take()
-            .expect("`csrf_cookie` has already been taken")
     }
 }

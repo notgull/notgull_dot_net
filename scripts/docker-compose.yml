@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 
 services:
   localstack:
@@ -13,8 +13,75 @@ services:
       - DEBUG=${DEBUG-}
       - DATA_DIR=/tmp/localstack/data
       - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR-}
-      - HOST_TMP_FOLDER=${TMPDIR:-/tmp/}localstack
+      - HOST_TMP_FOLDER=/tmp/localstack
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - "${DATA_DIR-/tmp/localstack}:/tmp/localstack"
+      -
+        type: volume
+        source: localstack-data
+        target: /tmp/localstack
+        read_only: false
       - "/var/run/docker.sock:/var/run/docker.sock"
+  hydra-migrate:
+    container_name: "hydra-migrate"
+    image: oryd/hydra:v1.10.6-sqlite
+    environment:
+      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
+    volumes:
+      -
+        type: volume
+        source: hydra-sqlite
+        target: /var/lib/sqlite
+        read_only: false
+      -
+        type: bind
+        source: ./
+        target: /etc/config/hydra
+    command:
+      migrate -c /etc/config/hydra/hydra.yml sql -e --yes
+    restart: on-failure
+    networks:
+      - hydra-oauth2
+  hydra:
+    container_name: "hydra"
+    image: oryd/hydra:v1.10.6-sqlite
+    ports:
+     - "127.0.0.1:4444:4444"
+     - "127.0.0.1:4445:4445"
+     - "127.0.0.1:5555:5555"
+    environment:
+      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
+    volumes:
+      -
+        type: volume
+        source: hydra-sqlite
+        target: /var/lib/sqlite
+        read_only: false
+      -
+        type: bind
+        source: ./
+        target: /etc/config/hydra
+    command: 
+      serve -c /etc/config/hydra/hydra.yml all --dangerous-force-http
+    networks:
+     - hydra-oauth2
+    restart: unless-stopped
+    depends_on:
+      - hydra-migrate
+  consent:
+    container_name: "hydra-frontend"
+    environment:
+      - HYDRA_ADMIN_URL=http://hydra:4445
+    image: oryd/hydra-login-consent-node:v1.10.6
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - hydra-oauth2
+
+networks:
+  hydra-oauth2:
+
+volumes:
+  hydra-sqlite:
+  localstack-data:

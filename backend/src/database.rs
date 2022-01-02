@@ -223,12 +223,22 @@ impl Database for SqlDatabase {
             use schema::users::dsl::*;
 
             let conn = connect()?;
-            let user = users
-                .filter(uuid.eq(suuid))
-                .first(&conn)
-                .optional()?
-                .ok_or(DatabaseError::NotFound)?;
-            Ok(user)
+            let user = users.filter(uuid.eq(&suuid)).first(&conn).optional()?;
+            match user {
+                Some(user) => Ok(user),
+                None => {
+                    // insert a blank user
+                    let new_user = NewUser {
+                        uuid: suuid,
+                        name: None,
+                        roles: 0,
+                    };
+                    diesel::insert_into(users)
+                        .values(new_user)
+                        .get_result(&conn)
+                        .map_err(Into::into)
+                }
+            }
         })
         .await
         .expect("Blocking task panicked")

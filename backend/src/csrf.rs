@@ -4,8 +4,25 @@ use crate::Config;
 use bytes::Bytes;
 use csrf::{AesGcmCsrfProtection, CsrfProtection};
 use data_encoding::BASE64;
+use futures_util::future;
 use once_cell::sync::OnceCell;
 use std::convert::TryInto;
+use warp::{reject::custom as reject, Filter, Rejection};
+
+#[inline]
+pub fn check_csrf<E: From<CsrfError> + warp::reject::Reject>(
+) -> impl Filter<Extract = (Bytes,), Error = Rejection> + Clone + Send + Sync + 'static {
+    warp::get()
+        .and(warp::query::raw().map(|query: String| {
+            let bytes = query.into_bytes();
+            Bytes::from(bytes)
+        }))
+        .or(warp::body::bytes())
+        .unify()
+        .and_then(|data: Bytes| {
+            future::ready({ decode_and_verify_csrf(data).map_err(|e| reject(E::from(e))) })
+        })
+}
 
 /// Initialize CSRF operations for the server.
 #[inline]
@@ -47,8 +64,11 @@ pub fn generate_csrf_pair() -> Result<EncryptedCsrfPair, CsrfError> {
 
 /// Verify the CSRF from an input and a cookie.
 #[inline]
-pub fn decode_and_verify_csrf(data: Bytes, cookie: String) -> Result<Bytes, CsrfError> {
-    let TokenDeser { csrf_token } = match serde_urlencoded::from_bytes(&data) {
+pub fn decode_and_verify_csrf(data: Bytes) -> Result<Bytes, CsrfError> {
+    let TokenDeser {
+        csrf_token,
+        csrf_cookie,
+    } = match serde_urlencoded::from_bytes(&data) {
         Ok(d) => d,
         Err(_) => match serde_json::from_slice(&data) {
             Ok(d) => d,
@@ -57,7 +77,7 @@ pub fn decode_and_verify_csrf(data: Bytes, cookie: String) -> Result<Bytes, Csrf
     };
     verify_csrf_pair(Base64CsrfPair {
         token: csrf_token,
-        cookie,
+        cookie: csrf_cookie,
     })?;
     Ok(data)
 }
@@ -101,6 +121,7 @@ pub enum CsrfError {
 #[derive(serde::Deserialize)]
 struct TokenDeser {
     csrf_token: String,
+    csrf_cookie: String,
 }
 
 // The key used for AES CSRF operations.

@@ -1,6 +1,7 @@
 // GNU AGPL v3 License
 
 mod model;
+mod set_username;
 
 use crate::models::{Blogpost, User};
 use warp::{http::StatusCode, Filter, Reply};
@@ -23,9 +24,12 @@ pub fn api(
         )
     });
 
-    let api = user.or(blogpost).or(not_found);
+    let api = user
+        .or(blogpost)
+        .or(set_username::set_username())
+        .or(not_found);
 
-    warp::path("api").and(api)
+    warp::path("api").and(api).boxed()
 }
 
 #[derive(serde::Serialize)]

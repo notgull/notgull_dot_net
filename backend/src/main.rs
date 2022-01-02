@@ -11,6 +11,7 @@ mod routes;
 mod serve;
 
 pub mod api;
+pub mod auth;
 pub mod blog;
 #[path = "csrf.rs"]
 pub mod csrf_integration;
@@ -30,6 +31,8 @@ pub use query::*;
 use std::{env, ffi::OsString, process};
 
 fn main() {
+    env_logger::init();
+
     tokio::runtime::Builder::new_multi_thread()
         .enable_all()
         .build()
@@ -58,6 +61,7 @@ async fn entry() {
 
     markdown::initialize_markdown();
     csrf_integration::initialize_csrf(&cfg);
+    auth::initialize_auth(&cfg);
 
     // load the database
     if let Err(e) = database::initialize_database() {

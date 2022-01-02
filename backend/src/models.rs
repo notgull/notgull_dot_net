@@ -1,6 +1,7 @@
 // GNU AGPL v3 License
 
 use super::{
+    auth::Permissions,
     schema::{blogposts, users},
     Database, DatabaseError,
 };
@@ -13,7 +14,7 @@ use serde::{Deserialize, Serialize};
 pub struct User {
     pub id: i32,
     pub uuid: String,
-    pub name: String,
+    pub name: Option<String>,
     pub roles: i64,
 }
 
@@ -21,7 +22,7 @@ pub struct User {
 #[table_name = "users"]
 pub struct NewUser {
     pub uuid: String,
-    pub name: String,
+    pub name: Option<String>,
     pub roles: i64,
 }
 
@@ -91,6 +92,12 @@ pub struct BlogpostChange {
 
 #[async_trait]
 pub trait Model: Sized {
+    const LIST_PERMS: Permissions;
+    const GET_PERMS: Permissions;
+    const CREATE_PERMS: Permissions;
+    const UPDATE_PERMS: Permissions;
+    const DELETE_PERMS: Permissions;
+
     type ListFilter;
     type NewInstance;
     type UpdateInstance;
@@ -119,6 +126,12 @@ pub trait Model: Sized {
 
 #[async_trait]
 impl Model for User {
+    const LIST_PERMS: Permissions = Permissions(0b10);
+    const GET_PERMS: Permissions = Permissions(0b10);
+    const CREATE_PERMS: Permissions = Permissions(0b10);
+    const UPDATE_PERMS: Permissions = Permissions(0b10);
+    const DELETE_PERMS: Permissions = Permissions(0b10);
+
     type ListFilter = UserFilter;
     type NewInstance = NewUser;
     type UpdateInstance = UserChange;
@@ -161,6 +174,12 @@ impl Model for User {
 
 #[async_trait]
 impl Model for Blogpost {
+    const LIST_PERMS: Permissions = Permissions(0b0);
+    const GET_PERMS: Permissions = Permissions(0b0);
+    const CREATE_PERMS: Permissions = Permissions(0b1);
+    const UPDATE_PERMS: Permissions = Permissions(0b1);
+    const DELETE_PERMS: Permissions = Permissions(0b1);
+
     type ListFilter = BlogpostFilter;
     type NewInstance = NewBlogpost;
     type UpdateInstance = BlogpostChange;

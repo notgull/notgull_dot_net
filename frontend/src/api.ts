@@ -20,11 +20,20 @@ export type ListParameters<T> = PaginationParameters & Partial<T>;
 
 interface AuthDetails {
     csrf_token: string,
+    csrf_cookie: string,
 }
 
+interface NoId {
+    id?: never,
+}
+
+export type PostParameters<T> = T & NoId;
+
 function authDetails(): AuthDetails {
+    const consts = getConsts();
     return {
-        csrf_token: getConsts().csrf_token!,
+        csrf_token: consts.csrf_token!,
+        csrf_cookie: consts.csrf_cookie!,
     };
 }
 
@@ -33,4 +42,10 @@ function authDetails(): AuthDetails {
 export function list<T>(name: string, params: ListParameters<T>): Promise<T[]> {
     const realParams = Object.assign(params, authDetails());
     return api.get(`${name}`, { params: realParams }).then(res => res.data);
+};
+
+// send a POST request to create a new object
+export function post<T>(name: string, params: PostParameters<T>): Promise<number> {
+    const realParams = Object.assign(params, authDetails());
+    return api.post(`${name}`, params).then(res => res.data.id);
 };

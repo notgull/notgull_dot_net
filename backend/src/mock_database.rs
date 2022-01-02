@@ -81,13 +81,13 @@ impl MockDatabase {
         let user1 = User {
             id: 1,
             uuid: "65a7e8c5-c235-49a9-ba00-6d9c049776f4".into(),
-            name: "John Notgull".into(),
+            name: Some("John Notgull".into()),
             roles: 0xFFFFFFFF,
         };
         let user2 = User {
             id: 2,
             uuid: "995a066d-de0e-4378-92e6-407f7aa1dc19".into(),
-            name: "Alan Smithee".into(),
+            name: Some("Alan Smithee".into()),
             roles: 0,
         };
 
@@ -265,7 +265,10 @@ impl Database for MockDatabase {
             .iter_mut()
             .find(|u| u.id == id)
             .ok_or(DatabaseError::NotFound)?;
-        apply_change!(user: uuid, name, roles);
+        apply_change!(user: uuid, roles);
+        if let Some(name) = name {
+            user.name = Some(name);
+        }
 
         Ok(())
     }
@@ -282,7 +285,7 @@ impl Database for MockDatabase {
             .filter(move |user| {
                 let mut cond = true;
                 if let Some(name) = name.as_deref() {
-                    cond = cond && user.name.contains(&name);
+                    cond = cond && user.name.as_ref().unwrap().contains(&name);
                 }
                 cond
             })
@@ -391,12 +394,12 @@ mod tests {
     async fn get_user_by_id() {
         let database = MockDatabase::with_test_data();
         assert_eq!(
-            database.get_user_by_id(1).await.unwrap().name,
-            "John Notgull"
+            database.get_user_by_id(1).await.unwrap().name.as_deref(),
+            Some("John Notgull")
         );
         assert_eq!(
-            database.get_user_by_id(2).await.unwrap().name,
-            "Alan Smithee"
+            database.get_user_by_id(2).await.unwrap().name.as_deref(),
+            Some("Alan Smithee")
         );
     }
 
@@ -408,16 +411,18 @@ mod tests {
                 .get_user_by_uuid("65a7e8c5-c235-49a9-ba00-6d9c049776f4".into())
                 .await
                 .unwrap()
-                .name,
-            "John Notgull"
+                .name
+                .as_deref(),
+            Some("John Notgull")
         );
         assert_eq!(
             database
                 .get_user_by_uuid("995a066d-de0e-4378-92e6-407f7aa1dc19".into())
                 .await
                 .unwrap()
-                .name,
-            "Alan Smithee"
+                .name
+                .as_deref(),
+            Some("Alan Smithee")
         );
     }
 
@@ -425,14 +430,14 @@ mod tests {
     async fn insert_user() {
         let database = MockDatabase::with_test_data();
         let bp = NewUser {
-            name: "Shawn Spencer".into(),
+            name: Some("Shawn Spencer".into()),
             roles: 0,
             uuid: "50d36fd5-51d2-4d6a-b739-c0425de085ac".into(),
         };
         let id = database.insert_user(bp).await.unwrap();
         assert_eq!(
-            database.get_user_by_id(id).await.unwrap().name,
-            "Shawn Spencer"
+            database.get_user_by_id(id).await.unwrap().name.as_deref(),
+            Some("Shawn Spencer")
         );
     }
 
@@ -452,8 +457,8 @@ mod tests {
 
         database.update_user(id, change).await.unwrap();
         assert_eq!(
-            database.get_user_by_id(id).await.unwrap().name,
-            "Burton Guster"
+            database.get_user_by_id(id).await.unwrap().name.as_deref(),
+            Some("Burton Guster")
         );
     }
 

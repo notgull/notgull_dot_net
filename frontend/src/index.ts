@@ -4,10 +4,12 @@ import React from "react";
 import { render } from "react-dom";
 
 import ListBlogpost from "./listblogpost";
+import UsernameForm from "./usernameform";
 
 // If we find an element with this ID, load this component into it
 const router: Record<string, any> = {
     "blogpost-list": ListBlogpost,
+    "username-form": UsernameForm,
 };
 
 function main() {

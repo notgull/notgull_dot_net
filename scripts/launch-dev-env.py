@@ -4,6 +4,7 @@ import boto3
 import os
 import subprocess as sp
 import tempfile
+import time
 
 from botocore.exceptions import ClientError
 
@@ -43,6 +44,37 @@ def lookForFile(proot, fname):
     
     raise Exception(f"Could not find `{fname}`")
 
+# Add a new client to the list.
+def addClient(clientId, clientSecret, redirectUri):
+    dyml = "docker-compose.yml"
+    bpath = lookForFile("scripts", dyml)
+
+    args = [
+        "docker-compose",
+        "exec",
+        "hydra",
+        "hydra",
+        "clients",
+        "create",
+        "--endpoint",
+        "http://127.0.0.1:4445/",
+        "--id",
+        clientId,
+        "--secret",
+        clientSecret,
+        "--grant-types",
+        "authorization_code,refresh_token",
+        "--response-types",
+        "code,id_token",
+        "--scope",
+        "openid,offline",
+        "--callbacks",
+        redirectUri
+    ]
+
+    log("Running client creater")
+    sp.run(args, cwd=bpath)
+
 # Launches docker-compose, bringing up localstack
 # 
 # Returns the docker-compose subprocess.
@@ -58,11 +90,16 @@ def dockerCompose(dir):
     p = sp.Popen(["docker-compose", "up"], cwd=bpath, env=dc_env, stdout=sp.PIPE)
     return p
 
+sum_str = ""
+
 # Stall until the given subprocess outputs the given byte sequence.
 def waitForBytes(p, bytes):
+    global sum_str
     for line in iter(p.stdout.readline, b''):
-        print(line.decode("utf-8"), end="")
-        if bytes in line:
+        sline = line.decode("utf-8")
+        print(sline, end = "")
+        sum_str += sline
+        if bytes in sum_str:
             break
 
 # Connect to the new localstack instance using Boto3
@@ -119,13 +156,18 @@ def main():
     try:
         with tempfile.TemporaryDirectory("ndntemp") as tempdir:
             dc_process = dockerCompose(tempdir)
-            waitForBytes(dc_process, b"Ready.")
+            waitForBytes(dc_process, "Ready.")
 
             # make sure npx gulp is done before we upload public files
             gulp_process.wait()
             if gulp_process.returncode != 0:
                 dc_process.terminate()
                 raise Exception("Failed to run gulp")
+
+            waitForBytes(dc_process, "msg=Setting up http server on :4445")
+            time.sleep(1.5)
+
+            addClient("ndndotnet", "ndndotsecret", "https://127.0.0.1:8199/callback")
 
             # now that we know we're ready, start uploading files
             s3_client = connectS3()
@@ -137,6 +179,9 @@ def main():
             finally:
                 dc_process.terminate()
                 dc_process.wait()
+
+                for line in iter(dc_process.stdout.readline, b''):
+                    print(line.decode("utf-8"), end="")
     except PermissionError as e:
         # eat this error
         pass

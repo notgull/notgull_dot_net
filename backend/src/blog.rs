@@ -25,7 +25,7 @@ pub fn list_blogpost(
         .and_then(|data, mut state: pagerender::PageRenderState| {
             future::ready({
                 let mut options = templates::TemplateOptions::default();
-                options.csrf_token = Some(state.csrf_token());
+                options.csrf_tokens = Some(state.csrf_tokens());
 
                 templates::template("bloglist", data, options)
                     .map_err(|e| warp::reject::custom(PageRenderError::from(e)))
@@ -33,13 +33,7 @@ pub fn list_blogpost(
             })
         })
         .untuple_one()
-        .map(|res: String, mut state: pagerender::PageRenderState| {
-            with_header(
-                html(res),
-                "Set-Cookie",
-                format!("csrf_cookie={}", state.csrf_cookie()),
-            )
-        })
+        .map(|res: String, mut state: pagerender::PageRenderState| html(res))
 }
 
 #[derive(serde::Serialize)]
@@ -68,7 +62,9 @@ async fn view_blogpost_inner(
     let (blogpost, user) = database.get_blogpost_and_user_by_url(url).await?;
 
     // format
-    blogpost.render_to_html(&user.name).map(html)
+    blogpost
+        .render_to_html(user.name.as_ref().unwrap())
+        .map(html)
 }
 
 impl Blogpost {

@@ -14,7 +14,7 @@ table! {
     users (id) {
         id -> Int4,
         uuid -> Varchar,
-        name -> Varchar,
+        name -> Nullable<Varchar>,
         roles -> Int8,
     }
 }

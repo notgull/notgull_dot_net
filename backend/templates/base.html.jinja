@@ -15,9 +15,11 @@
         // set up some global variables
         window.constants.auth_url = "{{ auth_url }}";
         window.constants.api_url = "{{ api_url }}";
+        window.constants.web_url = "{{ web_url }}";
 
         {% if csrf_token %}
           window.constants.csrf_token = "{{ csrf_token }}";
+          window.constants.csrf_cookie = "{{ csrf_cookie }}"
         {% endif %}
       </script>
     
@@ -31,13 +33,13 @@
   <body>
     {% block body %}
     <div id="header">
-      <h1><a href="/">notgull.net</a></h1>
+      <h1><a href="{{ web_url }}">notgull.net</a></h1>
       <h2>The world's #1 source of notgull</h2>
     </div>
     <div id="navbar">
       <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/blog">Blog</a></li>
+        <li><a href="{{ web_url }}">Home</a></li>
+        <li><a href="{{ web_url }}/blog">Blog</a></li>
       </ul>
     </div>
     <div id="content-wrapper">
