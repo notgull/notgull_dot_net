@@ -153,7 +153,10 @@ def uploadPublic(s3_client):
 
             log(f"Uploading file {file_path}...")
 
-            s3_client.upload_file(file_path, BUCKET_NAME, object_path)
+            if "css" in file_path:
+              s3_client.upload_file(file_path, BUCKET_NAME, object_path, { "ContentType": "text/css" })
+            else:
+              s3_client.upload_file(file_path, BUCKET_NAME, object_path)
 
             log(f"Uploaded file {file_path}")
 

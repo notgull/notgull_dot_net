@@ -10,6 +10,10 @@ const webpack_config = require("./webpack.config");
 const fs = require("fs");
 const path = require("path");
 
+const dartSass = require("sass");
+const gulpSass = require("gulp-sass");
+const sass = gulpSass(dartSass);
+
 // Settings
 const MODE = "development";
 
@@ -17,6 +21,7 @@ const MODE = "development";
 const NODE_MODULES = "./node_modules/";
 const PUBLIC_DIR = "./public/";
 const SOURCE_DIR = "./src/";
+const STYLE_DIR = "./style/";
 
 // set webpack_config development specifier
 webpack_config.mode = MODE;
@@ -50,7 +55,8 @@ function runWebpack() {
 // Create necessary directories
 const createPublicDir = createFolder(PUBLIC_DIR);
 const createJsDir = createFolder(path.join(PUBLIC_DIR, "js"));
-const createDirs = parallel(createPublicDir, createJsDir);
+const createCssDir = createFolder(path.join(PUBLIC_DIR, "css"));
+const createDirs = parallel(createPublicDir, createJsDir, createCssDir);
 
 // Copy files from node_modules to public/js
 const MODULES_TO_COPY = [
@@ -67,8 +73,15 @@ const copyModules = parallel(...copyModulesTasks);
 // Run webpack
 const doesRunWebpack = runWebpack;
 
+// Process SCSS files.
+function processSCSS() {
+    return src(path.join(STYLE_DIR, "**/*"))
+        .pipe(sass())
+        .pipe(dest(path.join(PUBLIC_DIR, "css")));
+}
+
 // Build the frontend.
-const buildFrontend = series(createDirs, parallel(copyModules, doesRunWebpack));
+const buildFrontend = series(createDirs, parallel(copyModules, doesRunWebpack, processSCSS));
 
 // Default task is to build the frontend.
 exports.default = buildFrontend;

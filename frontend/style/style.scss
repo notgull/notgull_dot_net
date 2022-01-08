@@ -1,0 +1,104 @@
+// GNU AGPL v3 License
+
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Karla&display=swap');
+
+$static_url: "https://notgull.s3.us-west-1.amazonaws.com";
+$image_prefix: "#{$static_url}/images";
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Karla;
+    line-height: 1.5em;
+}
+
+#header {
+    background-image: url("#{$image_prefix}/header.jpg");
+    margin-top: -35px;
+
+    h1 {
+        margin-left: 60px;
+        margin-top: 35px;
+        margin-bottom: 0px;
+        padding-top: 10px;
+
+        a {
+            color: #eee;
+            text-decoration: none;
+            font-size: 125%;
+            text-shadow: 3px 3px 2px black;
+            font-family: Mulish;
+            font-size: 125%;
+        }
+    }
+
+    h2 {
+        margin-top: 10px;
+        margin-left: 50px;
+        margin-bottom: 0px;
+        padding-bottom: 10px;
+
+        color: #fffbb9;
+        font-size: 125%;
+        font-family: Mulish;
+        text-shadow: 2px 2px black;
+    }
+}
+
+#login {
+    position: absolute;
+    top: 25px;
+    right: 15px;
+
+    a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #eee;
+        text-shadow: 2px 2px black;
+    }
+}
+
+#navbar {
+    border-top: solid #535353 3px;
+    border-bottom: solid #535353 3px;
+
+    ul {
+        list-style-type: none;
+        margin: 0px;
+        padding: 0px;
+        overflow: hidden;
+        background-color: #333333;
+
+        li {
+            float: left;
+            padding: 12px 20px;
+            margin-left: 12px; 
+            border-right: solid white 1px;
+
+            a {
+                text-decoration: none;
+                color: #eee;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+#content-wrapper {
+    position: relative;
+    margin: 2em auto 0;
+    max-width: 1040px;
+    min-height: 1300px;
+    height: auto !important;
+    padding: 0 1em;
+}
+
+#author {
+    font-style: italic;
+}
+
+#date {
+    font-style: italic;
+    font-size: 50%;
+}

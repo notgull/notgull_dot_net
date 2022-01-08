@@ -37,6 +37,10 @@
           type="text/javascript"
           src="{{ static_url }}/js/{{ js_package }}.js"></script>
       {% endfor %}
+
+      <style type="text/css">
+        @import url("{{ static_url }}/css/style.css");
+      </style>
     {% endblock %}
   </head>
   <body>
@@ -53,7 +57,7 @@
       </ul>
     </div>
     <div id="content-wrapper">
-      <div id="header">
+      <div id="content-header">
         {% block header %}
           <h1>{{ title }}</h1>
         {% endblock %}
