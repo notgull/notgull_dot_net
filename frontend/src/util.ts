@@ -7,7 +7,8 @@ export type Empty = Record<string, never>;
 export enum LoadingState {
     Unmounted,
     Loading,
-    Loaded
+    Loaded,
+    ErrorOccurred,
 };
 
 /// Possible page sizes.
@@ -17,3 +18,8 @@ export enum PageSize {
     _50 = 50,
     _100 = 100,
 };
+
+/// Capitalize a string.
+export function capitalize(s: string): string {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}

@@ -1,6 +1,6 @@
 // GNU AGPL v3 License
 
-use super::{create_login_session, CreateLoginSessionError};
+use super::{create_login_session, session, CreateLoginSessionError};
 use crate::{
     query::{with_database, Database, DatabaseError},
     Config,
@@ -30,11 +30,6 @@ use warp::{
 
 #[inline]
 pub fn initialize_oauth2(cfg: &Config) {
-    let builder = ReqwestClient::builder();
-
-    #[cfg(debug_assertions)]
-    let builder = builder.danger_accept_invalid_certs(true);
-
     OAUTH2
         .set(Oauth2 {
             client: IdClient::new(
@@ -46,7 +41,7 @@ pub fn initialize_oauth2(cfg: &Config) {
             .set_redirect_uri(RedirectUrl::new(cfg.oauth2.redirect_url.clone()).unwrap()),
             extant_states: DashMap::new(),
             #[cfg(not(test))]
-            transport: builder.build().expect("Failed to build `reqwest` client"),
+            transport: crate::CLIENT.clone(),
         })
         .unwrap_or_else(|_| panic!("`initialize_oauth2` called more than once"));
 }
@@ -56,9 +51,20 @@ static OAUTH2: OnceCell<Oauth2> = OnceCell::new();
 #[inline]
 pub fn login(
 ) -> impl Filter<Extract = (impl Reply,), Error = Rejection> + Clone + Send + Sync + 'static {
-    warp::path!("login")
-        .and(warp::get())
-        .map(|| warp::redirect::found(begin_oauth2_handshake()))
+    warp::path!("login").and(warp::get()).and(
+        super::with_session()
+            .map(|s: Option<_>| s.is_some())
+            .and_then(|s| {
+                ready({
+                    if s {
+                        Ok(warp::redirect::found("/".parse::<Uri>().unwrap()))
+                    } else {
+                        Err(warp::reject())
+                    }
+                })
+            })
+            .or(warp::any().map(|| warp::redirect::found(begin_oauth2_handshake()))),
+    )
 }
 
 #[inline]
@@ -222,6 +228,13 @@ async fn http_transport(request: HttpRequest) -> Result<HttpResponse, ReqwestErr
             })
         }
     }
+}
+
+#[inline]
+pub fn clear_expired_states() {
+    let oauth = OAUTH2.get().unwrap();
+    let now = Instant::now();
+    oauth.extant_states.retain(|_, state| state.expires > now);
 }
 
 struct Oauth2 {

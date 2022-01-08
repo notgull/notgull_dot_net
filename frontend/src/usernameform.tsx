@@ -1,9 +1,9 @@
 // GNU AGPL v3 License
 
-import React, { Component } from "react";
+import { Component, Fragment, h } from "preact";
 
+import getConsts from "./consts";
 import { Empty } from "./util";
-import { getConsts } from "./consts";
 import { post } from "./api";
 
 interface UsernameFormState {
@@ -33,7 +33,7 @@ export class UsernameForm extends Component<Empty, UsernameFormState> {
                 <p>
                     You have not yet entered a username. Please enter your username.
                 </p>
-                <input type="text" value={value} onChange={(ev) => setValue(ev.target.value)} />
+                <input type="text" value={value} onChange={(ev) => setValue((ev!.target! as HTMLInputElement).value)} />
                 <button onClick={() => this.sendUsername()}>Submit</button>
             </>
         )

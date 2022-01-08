@@ -6,6 +6,12 @@
 <p id="date">Posted On {{ created_at }}</p>
 {% endblock %}
 
+{% block init_js %}
+{{ super() }}
+
+window.constants.cur_blogpost_id = {{ blogpost_id }};
+{% endblock %}
+
 {% block content %}
 <div id="blogcontent">
 {{ body }}
@@ -17,5 +23,10 @@
       <li>{{ tag }}</li>
     {% endfor %}
   </ul>
+</div>
+
+<div>
+  <div id="edit_blogpost"></div>
+  <div id="delete_blogpost"></div>
 </div>
 {% endblock %}

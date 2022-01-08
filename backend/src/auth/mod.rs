@@ -18,6 +18,7 @@ use std::{
     convert::Infallible,
     time::{Duration, Instant},
 };
+use tokio::time::interval;
 use warp::{Filter, Rejection, Reply};
 
 #[inline]
@@ -85,6 +86,25 @@ pub fn fake_access_token_fewer_perms() -> &'static str {
     FAKE_SESSION_FEWER_PERMS
 }
 
+#[inline]
+fn clear_expired_auth() {
+    oauth::clear_expired_states();
+    let now = Instant::now();
+    LOGIN_TABLE
+        .get()
+        .unwrap()
+        .retain(|_, session| session.expires > now);
+}
+
+#[inline]
+pub async fn clear_auth_task() {
+    let mut i = interval(Duration::from_secs(60 * 60 * 4));
+    loop {
+        i.tick().await;
+        clear_expired_auth();
+    }
+}
+
 /// Create a new session in the login table.
 #[inline]
 pub async fn create_login_session(
@@ -117,7 +137,13 @@ pub async fn create_login_session(
 /// Get a login session from the table.
 #[inline]
 pub fn session(access: &str) -> Option<Ref<'static, String, Session>> {
-    LOGIN_TABLE.get().expect(NO_SET).get(access)
+    let s = LOGIN_TABLE.get().expect(NO_SET).get(access);
+    if let Some(s) = s.as_ref() {
+        tracing::debug!("Found user: {:?}", s.name);
+    } else {
+        tracing::debug!("No user found");
+    }
+    s
 }
 
 /// Set the name for a session, used for set_username().
@@ -139,7 +165,8 @@ pub struct Session {
     expires: Instant,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default, serde::Serialize)]
+#[serde(transparent)]
 pub struct Permissions(pub i64);
 
 impl Permissions {
@@ -151,6 +178,13 @@ impl Permissions {
             self.0
         );
         self.0 & user_roles.0 == self.0
+    }
+}
+
+impl From<i64> for Permissions {
+    #[inline]
+    fn from(i: i64) -> Permissions {
+        Permissions(i)
     }
 }
 

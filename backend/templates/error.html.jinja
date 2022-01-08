@@ -1,0 +1,14 @@
+{% extends "base" %}
+
+{% block content %}
+<p>
+  While processing your request, a {{ error_code }} error occurred. This
+  occurred because: {{ description }}.
+</p>
+
+{% if our_fault %}
+<p>
+  Please contact the site owner for troubleshooting information.
+</p>
+{% endif %}
+{% endblock %}

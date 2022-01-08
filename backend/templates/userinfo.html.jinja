@@ -1,0 +1,13 @@
+{% extends "base" %}
+
+{% block init_js %}
+{{ super() }}
+
+window.constants.cur_user_id = {{ editing_user_id }};
+{% endblock %}
+
+{% block content %}
+<div id="user-info">
+  <!-- intentionally blank -->
+</div>
+{% endblock %}

@@ -10,3 +10,11 @@ export interface Blogpost {
     author_id: number,
     created_at: Date
 };
+
+// analagous to the User struct on the backend
+export interface User {
+    id: number,
+    uuid: string,
+    name: string | undefined,
+    roles: number,
+};

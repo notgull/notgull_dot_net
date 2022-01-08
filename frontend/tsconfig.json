@@ -5,6 +5,8 @@
       "module": "es6",
       "target": "es3",
       "jsx": "react",
+      "jsxFactory": "h",
+      "jsxFragmentFactory": "Fragment",
       "strict": true,
       "strictPropertyInitialization": false,
       "allowSyntheticDefaultImports": true,

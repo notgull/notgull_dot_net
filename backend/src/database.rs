@@ -158,26 +158,33 @@ impl Database for SqlDatabase {
             let conn = connect()?;
             let mut query = blogposts.into_boxed();
             if let Some(stitle) = stitle {
-                query = query.filter(title.like(stitle));
+                query = query.filter(title.ilike(stitle));
             }
             if let Some(stags) = stags {
-                query = query.filter(tags.like(stags));
+                query = query.filter(tags.ilike(stags));
             }
             if let Some(surl) = surl {
-                query = query.filter(url.like(surl));
+                query = query.filter(url.ilike(surl));
             }
             if let Some(sbody) = sbody {
-                query = query.filter(body.like(sbody));
+                query = query.filter(body.ilike(sbody));
             }
             if let Some(sauthor_id) = sauthor_id {
                 query = query.filter(author_id.eq(sauthor_id));
             }
 
-            let posts = query
+            let mut posts: Vec<Blogpost> = query
                 .order_by(created_at.desc())
                 .offset(skip as i64)
                 .limit(count as i64)
                 .load(&conn)?;
+
+            // limit str len to 100
+            posts.iter_mut().for_each(|post| {
+                let dnewline_index = post.body.find("\n\n").unwrap_or(500);
+                post.body.truncate(dnewline_index)
+            });
+
             Ok(posts)
         })
         .await

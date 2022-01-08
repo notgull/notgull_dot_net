@@ -2,28 +2,37 @@
 <html>
   <head>
     {% block head %}
-      <title>{{ title }}</title>
+      <title>{{ title }} - notgull.net</title>
       <meta charset="UTF-8" />
       <meta name="description" content="We've spent so much time chasing suns, we lost sight of what we came for." />
       <meta name="keywords" content="creative,scp,notgull" />
       <meta name="author" content="John Notgull" />
       <script type="text/javascript">
-        'use strict';
+        {% block init_js %}
+          'use strict';
 
-        window.constants = {};
+          window.constants = {};
 
-        // set up some global variables
-        window.constants.auth_url = "{{ auth_url }}";
-        window.constants.api_url = "{{ api_url }}";
-        window.constants.web_url = "{{ web_url }}";
+          // set up some global variables
+          window.constants.auth_url = "{{ auth_url }}";
+          window.constants.api_url = "{{ api_url }}";
+          window.constants.web_url = "{{ web_url }}";
+          window.constants.static_url = "{{ static_url }}";
 
-        {% if csrf_token %}
-          window.constants.csrf_token = "{{ csrf_token }}";
-          window.constants.csrf_cookie = "{{ csrf_cookie }}"
-        {% endif %}
+          {% if csrf_token %}
+            window.constants.csrf_token = "{{ csrf_token }}";
+            window.constants.csrf_cookie = "{{ csrf_cookie }}"
+          {% endif %}
+
+          {% if user_id %}
+            window.constants.user_id = {{ user_id }};
+          {% endif %}
+
+          window.constants.user_perms = {{ user_perms }};
+        {% endblock %}
       </script>
     
-      {% for js_package in ["axios","react","react-dom","notgull"] %}
+      {% for js_package in ["axios","preact","notgull"] %}
         <script
           type="text/javascript"
           src="{{ static_url }}/js/{{ js_package }}.js"></script>
@@ -35,6 +44,7 @@
     <div id="header">
       <h1><a href="{{ web_url }}">notgull.net</a></h1>
       <h2>The world's #1 source of notgull</h2>
+      <div id="login" style="float: right"></div>
     </div>
     <div id="navbar">
       <ul>

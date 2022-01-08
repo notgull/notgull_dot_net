@@ -1,6 +1,6 @@
 // GNU AGPL v3 License
 
-import React, { Component } from "react";
+import { Component, h } from "preact";
 
 import { Empty } from "./util";
 

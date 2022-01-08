@@ -1,6 +1,6 @@
 // GNU AGPL v3 License
 
-use crate::{pagerender, templates};
+use crate::{pagerender, templates, Title};
 use futures_util::future::{self, ok};
 use std::convert::Infallible;
 use tera::Error as TeraError;
@@ -17,13 +17,10 @@ pub fn username_form(
         .map(|| Title {
             title: "Enter Username",
         })
-        .and(pagerender::page_render_loader::<true>())
+        .and(pagerender::page_render_loader::<true>(0))
         .and_then(|data, mut state: pagerender::PageRenderState| {
             future::ready({
-                let mut options = templates::TemplateOptions::default();
-                options.csrf_tokens = Some(state.csrf_tokens());
-
-                templates::template("usernameform", data, options)
+                templates::template("usernameform", data, state.template_options())
                     .map_err(|e| warp::reject::custom(UsernameFormError::from(e)))
                     .map(move |t| (t, state))
             })
@@ -55,8 +52,3 @@ impl From<TeraError> for UsernameFormError {
 }
 
 impl warp::reject::Reject for UsernameFormError {}
-
-#[derive(serde::Serialize)]
-struct Title<'a> {
-    title: &'a str,
-}

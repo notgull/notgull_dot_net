@@ -20,7 +20,7 @@ pub fn check_csrf<E: From<CsrfError> + warp::reject::Reject>(
         .or(warp::body::bytes())
         .unify()
         .and_then(|data: Bytes| {
-            future::ready({ decode_and_verify_csrf(data).map_err(|e| reject(E::from(e))) })
+            future::ready(decode_and_verify_csrf(data).map_err(|e| reject(E::from(e))))
         })
 }
 

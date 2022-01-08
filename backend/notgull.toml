@@ -1,6 +1,7 @@
 hostname = "127.0.0.1"
 port = 8199
 template_path = "templates"
+favicon_path = "favicon.ico"
 csrf_key = "We spent so much time chasing suns, we lost sight..."
 
 [tls]
@@ -19,3 +20,12 @@ client_secret = "ndndotsecret"
 auth_url = "http://127.0.0.1:4444/oauth2/auth"
 token_url = "http://127.0.0.1:4444/oauth2/token"
 redirect_url = "https://127.0.0.1:8199/callback"
+
+[frontpage_map]
+about_me = { path = "templates/about_me.md", name = "About Me" }
+contact_me = { path = "templates/contact_me.md", name = "Contact Info" }
+
+[s3]
+bucket_name = "notgull"
+endpoint_url = "http://localhost:4566"
+region = "us-west-1"

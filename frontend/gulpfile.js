@@ -53,12 +53,9 @@ const createJsDir = createFolder(path.join(PUBLIC_DIR, "js"));
 const createDirs = parallel(createPublicDir, createJsDir);
 
 // Copy files from node_modules to public/js
-const REACT_PATH = MODE == "development" ? "react.development.js" : "react.production.min.js";
-const RD_PATH = MODE == "development" ? "react-dom.development.js" : "react-dom.production.min.js";
 const MODULES_TO_COPY = [
     ["axios", "dist/axios.min.js"],
-    ["react", path.join("umd", REACT_PATH)],
-    ["react-dom", path.join("umd", RD_PATH)],
+    ["preact", "dist/preact.min.js"],
 ];
 
 const copyModulesTasks = MODULES_TO_COPY.map((module) => {

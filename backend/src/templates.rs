@@ -1,6 +1,6 @@
 // GNU AGPL v3 License
 
-use crate::{Config, Urls};
+use crate::{auth::Permissions, Config, Urls};
 use arc_swap::ArcSwap;
 use notify::Watcher;
 use once_cell::sync::OnceCell;
@@ -25,6 +25,8 @@ struct TemplateState {
 #[derive(Default)]
 pub struct TemplateOptions {
     pub csrf_tokens: Option<(String, String)>,
+    pub id: Option<i32>,
+    pub perms: Permissions,
 }
 
 #[inline]
@@ -33,7 +35,11 @@ pub fn template<T: serde::Serialize>(
     data: T,
     options: TemplateOptions,
 ) -> Result<String, Error> {
-    let TemplateOptions { csrf_tokens } = options;
+    let TemplateOptions {
+        csrf_tokens,
+        id,
+        perms,
+    } = options;
 
     // load the global state
     let templates = TEMPLATES
@@ -48,11 +54,16 @@ pub fn template<T: serde::Serialize>(
     context.insert("api_url", &templates.urls.api_url);
     context.insert("static_url", &templates.urls.static_url);
     context.insert("web_url", &templates.urls.web_url);
+    context.insert("user_perms", &perms);
 
     // add csrf token
     if let Some((csrf_token, csrf_cookie)) = csrf_tokens {
         context.insert("csrf_token", &csrf_token);
         context.insert("csrf_cookie", &csrf_cookie);
+    }
+
+    if let Some(id) = id {
+        context.insert("user_id", &id);
     }
 
     // preform the templating
@@ -71,7 +82,7 @@ pub async fn initialize_templates(cfg: &Config) -> Result<(), PopulateTemplateEr
         .unwrap_or_else(|_| panic!("`initialize_templates` called more than once"));
 
     // populate our templates
-    let res = tokio::task::spawn_blocking(|| populate_templates())
+    let res = tokio::task::spawn_blocking(populate_templates)
         .await
         .expect("Blocking task panicked");
 
@@ -190,6 +201,7 @@ pub fn initialize_test_templates() -> Result<(), Error> {
         ("very_basic", "Hello, {{ name }}!"),
         ("base", include_str!("../templates/base.html.jinja")),
         ("blogpost", include_str!("../templates/blogpost.html.jinja")),
+        ("error", include_str!("../templates/error.html.jinja")),
     ];
 
     let mut tera = Tera::default();
@@ -211,15 +223,11 @@ pub fn initialize_test_templates() -> Result<(), Error> {
 #[cfg(test)]
 mod test {
     use super::{initialize_test_templates, template};
+    use crate::Title;
 
     #[derive(serde::Serialize)]
     struct Name {
         name: &'static str,
-    }
-
-    #[derive(serde::Serialize)]
-    struct Title {
-        title: &'static str,
     }
 
     #[test]
@@ -242,6 +250,6 @@ mod test {
             Default::default(),
         )
         .unwrap();
-        assert!(res.contains("<title>WorldWideWeb</title>"));
+        assert!(res.contains("<title>WorldWideWeb"));
     }
 }

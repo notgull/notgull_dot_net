@@ -1,0 +1,20 @@
+1641514311491	geckodriver	INFO	Listening on 127.0.0.1:54935
+1641514311620	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileWVSt0E"
+1641514318713	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileWVSt0E/search.json.mozlz4", (void 0)))
+1641514328077	Marionette	INFO	Listening on port 34487
+1641514328305	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641514373701	Marionette	INFO	Stopped listening on port 34487
+1641514445195	geckodriver	INFO	Listening on 127.0.0.1:53875
+1641514446281	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilea5hf7s"
+1641514454379	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilea5hf7s/search.json.mozlz4", (void 0)))
+1641514469468	Marionette	INFO	Listening on port 34609
+1641514469680	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+Gdk-Message: 16:21:01.293: firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :0.
+
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.

@@ -124,6 +124,19 @@ def uploadPublic(s3_client):
         Bucket=BUCKET_NAME, 
     )
 
+    cors_configuration = {
+        'CORSRules': [{
+            'AllowedHeaders': ['*'],
+            'AllowedMethods': ['GET', 'HEAD'],
+            'AllowedOrigins': ['*'],
+            'ExposeHeaders': ['GET', 'HEAD'],
+            'MaxAgeSeconds': 3000
+        }]
+    }
+
+    s3_client.put_bucket_cors(Bucket=BUCKET_NAME,
+                       CORSConfiguration=cors_configuration)
+
     # walk over the "public" directory, and upload every file we can find
     for root, _, files in os.walk(public, topdown=False):
         # the absolute directory, and the root that we upload to AWS

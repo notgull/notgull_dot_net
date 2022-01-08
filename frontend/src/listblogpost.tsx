@@ -1,9 +1,11 @@
 // GNU AGPL v3 License
 
-import React, { Component } from "react";
+import { Component, Fragment, h } from "preact";
 
 import BlogpostList from "./blogpostlist";
+import DebouncedSearch from "./debounced_search";
 import Loading from "./loading";
+import Pagination from "./pagination";
 import { Blogpost } from "./models";
 import { list, ListParameters } from "./api";
 import { Empty, LoadingState, PageSize } from "./util";
@@ -18,6 +20,8 @@ interface ListBlogpostState {
     page_index: number,
     title: string,
     tags: string,
+
+    error?: string,
 }
 
 export class ListBlogpost extends Component<Empty, ListBlogpostState> {
@@ -28,7 +32,13 @@ export class ListBlogpost extends Component<Empty, ListBlogpostState> {
         page_index: 0,
         title: "",
         tags: "",
+        error: "",
     };
+
+    private updateSearch(title: string) {
+        this.setState({ title });
+        this.updateBlogposts();
+    }
 
     // update the blogposts variable based on updates to the state
     private updateBlogposts() {
@@ -38,8 +48,8 @@ export class ListBlogpost extends Component<Empty, ListBlogpostState> {
         });
 
         const params: ListParameters<Blogpost> = {
-            page_size: this.state.page_size,
-            page_index: this.state.page_index,
+            skip: this.state.page_size * this.state.page_index,
+            count: this.state.page_size,
         };
 
         if (this.state.title.length > 0) {
@@ -55,7 +65,12 @@ export class ListBlogpost extends Component<Empty, ListBlogpostState> {
                 loadstate: LoadingState.Loaded,
                 blogposts,
             });
-        });
+        }).catch((err) => {
+            this.setState({
+                loadstate: LoadingState.ErrorOccurred,
+                error: err.error,
+            })
+        })
     }
 
     componentDidMount() {
@@ -63,14 +78,46 @@ export class ListBlogpost extends Component<Empty, ListBlogpostState> {
     }
 
     render() {
+        let bodyComponent = <></>;
         if (this.state.loadstate == LoadingState.Loading) {
-            return <Loading />;
+            bodyComponent = <Loading />;
         } else if (this.state.loadstate == LoadingState.Loaded) {
-            return <BlogpostList blogposts={this.state.blogposts!} />;
+            bodyComponent = (
+                <>
+                    <BlogpostList blogposts={this.state.blogposts!} />
+                </>
+            );
+        } else if (this.state.loadstate == LoadingState.ErrorOccurred) {
+            bodyComponent = (
+                <p>
+                    Unable to load blogposts: {this.state.error!}
+                </p>
+            )
         } else {
             // component is mounting, eat the error
-            return <></>;
+            bodyComponent = <></>;
         }
+
+        const setPage = (page: number) => {
+            this.setState({
+                page_index: page,
+            });
+
+            this.updateBlogposts();
+        };
+
+        return (
+            <>
+                <DebouncedSearch 
+                 debounceTime={1000}
+                 onChange={(s) => this.updateSearch(s)}
+                 startingSearch={this.state.title} /> 
+                {bodyComponent}
+                <Pagination
+                 page={this.state.page_index}
+                 setPage={setPage} />
+            </>
+        )
     }
 };
 

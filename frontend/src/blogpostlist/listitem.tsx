@@ -1,6 +1,6 @@
 // GNU AGPL v3 License
 
-import React from "react";
+import { h } from "preact";
 
 import { Blogpost } from "../models";
 

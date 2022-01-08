@@ -8,21 +8,23 @@ use crate::{
 };
 use bytes::Bytes;
 use dashmap::mapref::one::Ref;
-use futures_util::future;
+use futures_util::future::{self, TryFutureExt};
 use serde::{de::DeserializeOwned, Serialize};
 use std::sync::Arc;
 use tracing::Level;
 use warp::{http::StatusCode, reject::custom as reject, reply::json, Filter, Reply};
 
 #[inline]
-pub fn model<M: Model + 'static>(
+pub fn model<M: Model + 'static, I>(
     name: &'static str,
+    invalidator: I,
 ) -> impl Filter<Extract = (impl Reply,), Error = warp::Rejection> + Clone + Send + Sync + 'static
 where
     M: Serialize,
     M::ListFilter: DeserializeOwned + Send + 'static,
     M::NewInstance: DeserializeOwned + Send + 'static,
     M::UpdateInstance: DeserializeOwned + Send + 'static,
+    I: Fn(i32) + Clone + Copy + Send + Sync + 'static,
 {
     // base that gets the body to deserialize from, as well as the current database
     let loader = loader_filter();
@@ -31,8 +33,8 @@ where
     let list = list_filter::<M, _, _>(&loader);
     let get = get_filter::<M, _, _>(&loader);
     let create = create_filter::<M, _, _>(&loader);
-    let update = update_filter::<M, _, _>(&loader);
-    let delete = delete_filter::<M, _, _>(&loader);
+    let update = update_filter::<M, _, _, I>(&loader, invalidator);
+    let delete = delete_filter::<M, _, _, I>(&loader, invalidator);
 
     // combine into final filter
     warp::path(name)
@@ -110,7 +112,7 @@ where
         .and(loader.clone())
         .and(warp::any().map(|| M::LIST_PERMS))
         .and_then(|body: Bytes, db, uperms, rperms| {
-            future::ready({ check_permsissions((body, db), uperms, rperms) })
+            future::ready(check_permsissions((body, db), uperms, rperms))
         })
         .untuple_one()
         .and_then(|body: Bytes, db| {
@@ -145,7 +147,7 @@ where
         .and(loader.clone())
         .and(warp::any().map(|| M::GET_PERMS))
         .and_then(|id, _, db, uperms, rperms| {
-            future::ready({ check_permsissions((id, db), uperms, rperms) })
+            future::ready(check_permsissions((id, db), uperms, rperms))
         })
         .untuple_one()
         .and_then(|id, db: Arc<_>| async move {
@@ -171,7 +173,7 @@ where
         .and(loader.clone())
         .and(warp::any().map(|| M::CREATE_PERMS))
         .and_then(|body: Bytes, db, uperms, rperms| {
-            future::ready({ check_permsissions((body, db), uperms, rperms) })
+            future::ready(check_permsissions((body, db), uperms, rperms))
         })
         .untuple_one()
         .and_then(|body: Bytes, db| {
@@ -184,10 +186,11 @@ where
             })
         })
         .untuple_one()
-        .and_then(|new, db: Arc<_>| async move {
-            M::create(&*db, new)
+        .and_then(move |new, db: Arc<_>| async move {
+            let res = M::create(&*db, new)
                 .await
-                .map_err(|e| reject(ModelError::from(e)))
+                .map_err(|e| reject(ModelError::from(e)));
+            res
         })
         .map(|id| {
             let wrapper = IdWrapper { id };
@@ -197,19 +200,21 @@ where
 
 /// Update the model based on a few facts.
 #[inline]
-fn update_filter<M: Model, D: Database + Send + Sync + 'static, F>(
+fn update_filter<M: Model, D: Database + Send + Sync + 'static, F, I>(
     loader: &F,
+    invalidator: I,
 ) -> impl Filter<Extract = (impl Reply,), Error = warp::Rejection> + Clone + Send + Sync + 'static
 where
     M::UpdateInstance: DeserializeOwned + Send + 'static,
     F: Filter<Extract = LoaderData<D>, Error = warp::Rejection> + Clone + Send + Sync + 'static,
+    I: Fn(i32) + Clone + Copy + Send + Sync + 'static,
 {
     warp::path!(i32)
         .and(warp::patch())
         .and(loader.clone())
         .and(warp::any().map(|| M::UPDATE_PERMS))
         .and_then(|id, body: Bytes, db, uperms, rperms| {
-            future::ready({ check_permsissions((id, body, db), uperms, rperms) })
+            future::ready(check_permsissions((id, body, db), uperms, rperms))
         })
         .untuple_one()
         .and_then(|id, body: Bytes, db| {
@@ -222,33 +227,39 @@ where
             })
         })
         .untuple_one()
-        .and_then(|id, changes, db: Arc<_>| async move {
-            M::update(&*db, id, changes)
+        .and_then(move |id, changes, db: Arc<_>| async move {
+            let res = M::update(&*db, id, changes)
                 .await
-                .map_err(|e| reject(ModelError::from(e)))
+                .map_err(|e| reject(ModelError::from(e)));
+            invalidator(id);
+            res
         })
         .map(|()| StatusCode::NO_CONTENT)
 }
 
 #[inline]
-fn delete_filter<M: Model, D: Database + Send + Sync + 'static, F>(
+fn delete_filter<M: Model, D: Database + Send + Sync + 'static, F, I>(
     loader: &F,
+    invalidator: I,
 ) -> impl Filter<Extract = (impl Reply,), Error = warp::Rejection> + Clone + Send + Sync + 'static
 where
     F: Filter<Extract = LoaderData<D>, Error = warp::Rejection> + Clone + Send + Sync + 'static,
+    I: Fn(i32) + Clone + Copy + Send + Sync + 'static,
 {
     warp::path!(i32)
         .and(warp::delete())
         .and(loader.clone())
         .and(warp::any().map(|| M::DELETE_PERMS))
         .and_then(|id: i32, _, db, uperms, rperms| {
-            future::ready({ check_permsissions((id, db), uperms, rperms) })
+            future::ready(check_permsissions((id, db), uperms, rperms))
         })
         .untuple_one()
-        .and_then(|id, db: Arc<_>| async move {
-            M::delete(&*db, id)
+        .and_then(move |id, db: Arc<_>| async move {
+            let res = M::delete(&*db, id)
                 .await
-                .map_err(|e| reject(ModelError::from(e)))
+                .map_err(|e| reject(ModelError::from(e)));
+            invalidator(id);
+            res
         })
         .map(|()| StatusCode::NO_CONTENT)
 }
@@ -355,6 +366,9 @@ mod tests {
     struct DummyChanges {
         data: Option<String>,
     }
+
+    #[inline]
+    fn no_cache(_: i32) {}
 
     #[async_trait::async_trait]
     impl Model for Dummy {
@@ -594,7 +608,7 @@ mod tests {
         initialize_auth_test();
         let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
-        let get = super::model::<Dummy>("dummy");
+        let get = super::model::<Dummy, _>("dummy", no_cache);
         let value = warp::test::request()
             .path(&format!(
                 "/dummy/2?csrf_token={}&csrf_cookie={}",
@@ -662,7 +676,7 @@ mod tests {
         initialize_auth_test();
         let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
-        let update = update_filter::<Dummy, _, _>(&loader_filter());
+        let update = update_filter::<Dummy, _, _, _>(&loader_filter(), no_cache);
         let body = format!(
             r#"{{"data":"update()","csrf_token":"{}","csrf_cookie":"{}","access_token":"{}"}}"#,
             token, cookie, tok
@@ -686,7 +700,7 @@ mod tests {
         initialize_auth_test();
         let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
-        let update = update_filter::<Dummy, _, _>(&loader_filter());
+        let update = update_filter::<Dummy, _, _, _>(&loader_filter(), no_cache);
         let body = format!(
             r#"{{"csrf_token":"{}","csrf_cookie":"{}","access_token":"{}"}}"#,
             token, cookie, tok
@@ -709,7 +723,7 @@ mod tests {
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
         initialize_auth_test();
         let tok = fake_access_token();
-        let delete = delete_filter::<Dummy, _, _>(&loader_filter());
+        let delete = delete_filter::<Dummy, _, _, _>(&loader_filter(), no_cache);
         let body = format!(
             r#"{{"csrf_token":"{}","csrf_cookie":"{}","access_token":"{}"}}"#,
             token, cookie, tok
@@ -733,7 +747,7 @@ mod tests {
         initialize_auth_test();
         let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
-        let model_filter = super::model::<Blogpost>("tbp");
+        let model_filter = super::model::<Blogpost, _>("tbp", no_cache);
         let value = warp::test::request()
             .path(&format!(
                 "/tbp?csrf_token={}&csrf_cookie={}&access_token={}",
@@ -761,7 +775,7 @@ mod tests {
         initialize_auth_test();
         let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
-        let model_filter = super::model::<Blogpost>("tbp");
+        let model_filter = super::model::<Blogpost, _>("tbp", no_cache);
         for (id, title) in [(1, "Chasing Suns"), (2, "How to make a website")] {
             let value = warp::test::request()
                 .path(&format!(
@@ -792,7 +806,7 @@ mod tests {
         initialize_auth_test();
         let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
-        let model_filter = super::model::<Blogpost>("tbp");
+        let model_filter = super::model::<Blogpost, _>("tbp", no_cache);
         let value = warp::test::request()
             .path(&format!(
                 "/tbp/3?csrf_token={}&csrf_cookie={}&access_token={}",
@@ -827,7 +841,7 @@ mod tests {
         initialize_auth_test();
         let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
-        let model_filter = super::model::<Blogpost>("tbp");
+        let model_filter = super::model::<Blogpost, _>("tbp", no_cache);
         let body = format!(
             r#"{{
                 "title":"Test1",
@@ -887,7 +901,7 @@ mod tests {
         initialize_auth_test();
         let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
-        let model_filter = super::model::<Blogpost>("tbp");
+        let model_filter = super::model::<Blogpost, _>("tbp", no_cache);
         let body = format!(
             r#"{{
                 "title":"Breaking Bones",
@@ -936,7 +950,7 @@ mod tests {
         initialize_auth_test();
         let tok = fake_access_token();
         let EncryptedCsrfPair { token, cookie } = csrf_integration::generate_csrf_pair().unwrap();
-        let model_filter = super::model::<Blogpost>("tbp");
+        let model_filter = super::model::<Blogpost, _>("tbp", no_cache);
         let body = format!(
             r#"{{"csrf_token":"{}","csrf_cookie":"{}","access_token":"{}"}}"#,
             &token, &cookie, tok

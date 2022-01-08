@@ -1,0 +1,13 @@
+{% extends "base" %}
+
+{% block init_js %}
+{{ super() }}
+
+window.constants.cur_blogpost_id = {{ blogpost_id }};
+{% endblock %}
+
+{% block content %}
+<div id="blogpost-edit">
+  <!-- intentionally blank -->
+</div>
+{% endblock %}

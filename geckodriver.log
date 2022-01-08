@@ -1,0 +1,405 @@
+1641515753392	geckodriver	INFO	Listening on 127.0.0.1:45683
+1641515754371	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilesQfqcC"
+1641515755401	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilesQfqcC/search.json.mozlz4", (void 0)))
+1641515757789	Marionette	INFO	Listening on port 35495
+1641515758045	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641515865061	Marionette	INFO	Stopped listening on port 35495
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1641515866782	geckodriver	INFO	Listening on 127.0.0.1:47989
+1641515866787	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilevbh7Sn"
+1641515867502	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilevbh7Sn/search.json.mozlz4", (void 0)))
+1641515869446	Marionette	INFO	Listening on port 43623
+1641515869512	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641516075015	Marionette	INFO	Stopped listening on port 43623
+1641516183817	geckodriver	INFO	Listening on 127.0.0.1:54115
+1641516183822	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileBhIP3I"
+1641516184543	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileBhIP3I/search.json.mozlz4", (void 0)))
+1641516186925	Marionette	INFO	Listening on port 45713
+1641516186984	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641516242177	Marionette	INFO	Stopped listening on port 45713
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1641516266435	geckodriver	INFO	Listening on 127.0.0.1:37279
+1641516266442	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileVpU5bi"
+1641516267363	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileVpU5bi/search.json.mozlz4", (void 0)))
+1641516269618	Marionette	INFO	Listening on port 41663
+1641516269673	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1641516316289	geckodriver	INFO	Listening on 127.0.0.1:41775
+1641516316294	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofiledj1irY"
+1641516317029	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofiledj1irY/search.json.mozlz4", (void 0)))
+1641516318986	Marionette	INFO	Listening on port 44763
+1641516319030	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641516409498	Marionette	INFO	Stopped listening on port 44763
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1641516411277	geckodriver	INFO	Listening on 127.0.0.1:60541
+1641516411288	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileg1Fp9w"
+1641516412187	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileg1Fp9w/search.json.mozlz4", (void 0)))
+1641516414203	Marionette	INFO	Listening on port 40631
+1641516414318	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641516485449	Marionette	INFO	Stopped listening on port 40631
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+[Parent 9453, IPC I/O Parent] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-BVyW0E/firefox-95.0.1+build2/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc:19
+1641516488275	geckodriver	INFO	Listening on 127.0.0.1:51913
+1641516488281	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileJinlNX"
+1641516489017	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileJinlNX/search.json.mozlz4", (void 0)))
+1641516491062	Marionette	INFO	Listening on port 44817
+1641516491118	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+SourceActor threw an exception: [Exception... "Failed to open input source 'javascript:void(0)'"  nsresult: "0x80040111 (NS_ERROR_NOT_AVAILABLE)"  location: "JS frame :: resource://devtools/shared/DevToolsUtils.js :: mainThreadFetch/< :: line 670"  data: yes]
+Stack: mainThreadFetch/<@resource://devtools/shared/DevToolsUtils.js:670:15
+mainThreadFetch@resource://devtools/shared/DevToolsUtils.js:516:10
+_fetchURLContents@resource://devtools/server/actors/utils/sources-manager.js:442:22
+urlContents@resource://devtools/server/actors/utils/sources-manager.js:406:17
+_resurrectSource@resource://devtools/server/actors/thread.js:2091:35
+addAllSources@resource://devtools/server/actors/thread.js:1446:14
+watch@resource://devtools/server/actors/resources/sources.js:52:17
+watchResources@resource://devtools/server/actors/resources/index.js:242:19
+_watchTargetResources@resource://devtools/server/actors/targets/target-actor-mixin.js:175:24
+addSessionDataEntry@resource://devtools/server/actors/targets/target-actor-mixin.js:52:20
+_addSessionDataEntry@resource://devtools/server/connectors/js-window-actor/DevToolsFrameChild.jsm:582:24
+receiveMessage@resource://devtools/server/connectors/js-window-actor/DevToolsFrameChild.jsm:496:21
+Line: 670, column: 0
+console.error: ({})
+JavaScript error: resource://devtools/shared/DevToolsUtils.js, line 670: NS_ERROR_NOT_AVAILABLE: Failed to open input source 'javascript:void(0)'
+JavaScript error: resource://devtools/client/shared/source-map/index.js, line 234: Error: Line numbers must be >= 1
+console.error: (new TypeError("parent is null", "resource://devtools/client/inspector/shared/style-change-tracker.js", 67))
+TypeError: parent is null: canMutationImpactCurrentStyles@resource://devtools/client/inspector/shared/style-change-tracker.js:67:24
+onMutations@resource://devtools/client/inspector/shared/style-change-tracker.js:84:41
+_emit@resource://devtools/shared/event-emitter.js:244:34
+emit@resource://devtools/shared/event-emitter.js:190:18
+emit@resource://devtools/shared/event-emitter.js:342:18
+getMutations@resource://devtools/client/fronts/walker.js:311:10
+
+console.error: (new TypeError("container.node.targetFront is null", "resource://devtools/client/inspector/markup/markup.js", 2314))
+console.error: (new TypeError("container.node.targetFront is null", "resource://devtools/client/inspector/markup/markup.js", 2314))
+1641517103253	Marionette	INFO	Stopped listening on port 44817
+1641517105108	geckodriver	INFO	Listening on 127.0.0.1:50565
+1641517105113	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileoXjKpA"
+1641517106376	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileoXjKpA/search.json.mozlz4", (void 0)))
+1641517108550	Marionette	INFO	Listening on port 38911
+1641517108646	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641517236264	Marionette	INFO	Stopped listening on port 38911
+console.error: PushServiceWebSocket: 
+  _beginWSSetup: Not in shutdown state! Current state
+  2
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1641517238116	geckodriver	INFO	Listening on 127.0.0.1:56487
+1641517238121	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilep4LzxZ"
+1641517238840	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilep4LzxZ/search.json.mozlz4", (void 0)))
+1641517240892	Marionette	INFO	Listening on port 35595
+1641517240953	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://portal.horizon3ai.com"
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://portal.horizon3ai.com"
+SourceActor threw an exception: [Exception... "Failed to open input source 'javascript:void(0)'"  nsresult: "0x80040111 (NS_ERROR_NOT_AVAILABLE)"  location: "JS frame :: resource://devtools/shared/DevToolsUtils.js :: mainThreadFetch/< :: line 670"  data: yes]
+Stack: mainThreadFetch/<@resource://devtools/shared/DevToolsUtils.js:670:15
+mainThreadFetch@resource://devtools/shared/DevToolsUtils.js:516:10
+_fetchURLContents@resource://devtools/server/actors/utils/sources-manager.js:442:22
+urlContents@resource://devtools/server/actors/utils/sources-manager.js:406:17
+_resurrectSource@resource://devtools/server/actors/thread.js:2091:35
+addAllSources@resource://devtools/server/actors/thread.js:1446:14
+watch@resource://devtools/server/actors/resources/sources.js:52:17
+watchResources@resource://devtools/server/actors/resources/index.js:242:19
+_watchTargetResources@resource://devtools/server/actors/targets/target-actor-mixin.js:175:24
+addSessionDataEntry@resource://devtools/server/actors/targets/target-actor-mixin.js:52:20
+_addSessionDataEntry@resource://devtools/server/connectors/js-window-actor/DevToolsFrameChild.jsm:582:24
+receiveMessage@resource://devtools/server/connectors/js-window-actor/DevToolsFrameChild.jsm:496:21
+Line: 670, column: 0
+console.error: ({})
+JavaScript error: resource://devtools/shared/DevToolsUtils.js, line 670: NS_ERROR_NOT_AVAILABLE: Failed to open input source 'javascript:void(0)'
+console.error: (new TypeError("container.node.targetFront is null", "resource://devtools/client/inspector/markup/markup.js", 2314))
+console.warn: LoginRecipes: "getRecipes: falling back to a synchronous message for:" "https://portal.horizon3ai.com"
+JavaScript error: resource://devtools/client/shared/source-map/index.js, line 234: Error: Line numbers must be >= 1
+1641517931471	Marionette	INFO	Stopped listening on port 35595
+1641517935608	geckodriver	INFO	Listening on 127.0.0.1:43735
+1641517935614	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileapGYOc"
+1641517936396	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileapGYOc/search.json.mozlz4", (void 0)))
+1641517938459	Marionette	INFO	Listening on port 43481
+1641517938538	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641518087070	Marionette	INFO	Stopped listening on port 43481
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1641518095627	geckodriver	INFO	Listening on 127.0.0.1:37717
+1641518095632	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileVuuSdM"
+1641518096335	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileVuuSdM/search.json.mozlz4", (void 0)))
+1641518098326	Marionette	INFO	Listening on port 43337
+1641518098359	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641518202094	Marionette	INFO	Stopped listening on port 43337
+[Parent 14640, IPC I/O Parent] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-BVyW0E/firefox-95.0.1+build2/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc:19
+1641518362950	geckodriver	INFO	Listening on 127.0.0.1:34127
+1641518362955	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileRLPsKU"
+1641518363705	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileRLPsKU/search.json.mozlz4", (void 0)))
+1641518365799	Marionette	INFO	Listening on port 39243
+1641518366256	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1641518424358	geckodriver	INFO	Listening on 127.0.0.1:39937
+1641518424364	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileYxw78k"
+1641518425119	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileYxw78k/search.json.mozlz4", (void 0)))
+1641518426680	Marionette	INFO	Listening on port 37327
+1641518426789	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641518496811	Marionette	INFO	Stopped listening on port 37327
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1641518506715	geckodriver	INFO	Listening on 127.0.0.1:44797
+1641518506720	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilecVdbQz"
+1641518507466	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilecVdbQz/search.json.mozlz4", (void 0)))
+1641518509523	Marionette	INFO	Listening on port 44327
+1641518509565	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641519195450	Marionette	INFO	Stopped listening on port 44327
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+[Parent 16619, IPC I/O Parent] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-BVyW0E/firefox-95.0.1+build2/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc:19
+JavaScript error: chrome://remote/content/marionette/cert.js, line 55: NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsICertOverrideService.setDisableAllSecurityChecksAndLetAttackersInterceptMyData]
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1641575399617	geckodriver	INFO	Listening on 127.0.0.1:45563
+1641575400627	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilet8kUxa"
+1641575401576	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilet8kUxa/search.json.mozlz4", (void 0)))
+1641575404046	Marionette	INFO	Listening on port 44749
+1641575404618	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641575502177	Marionette	INFO	Stopped listening on port 44749
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1641575511382	geckodriver	INFO	Listening on 127.0.0.1:58515
+1641575511404	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofile617G90"
+1641575513394	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile617G90/search.json.mozlz4", (void 0)))
+1641575515793	Marionette	INFO	Listening on port 44513
+1641575516278	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641575641402	Marionette	INFO	Stopped listening on port 44513
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1641575642348	geckodriver	INFO	Listening on 127.0.0.1:49371
+1641575642353	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileO6Q6R5"
+1641575643141	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileO6Q6R5/search.json.mozlz4", (void 0)))
+1641575645196	Marionette	INFO	Listening on port 40471
+1641575645305	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1641575728749	geckodriver	INFO	Listening on 127.0.0.1:56453
+1641575728754	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileQ63dua"
+1641575729487	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileQ63dua/search.json.mozlz4", (void 0)))
+1641575731745	Marionette	INFO	Listening on port 35383
+1641575731811	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641575852279	Marionette	INFO	Stopped listening on port 35383
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1641575854389	geckodriver	INFO	Listening on 127.0.0.1:44779
+1641575854398	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilefJ5ajp"
+1641575855212	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilefJ5ajp/search.json.mozlz4", (void 0)))
+1641575857265	Marionette	INFO	Listening on port 41093
+1641575857334	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641575980088	Marionette	INFO	Stopped listening on port 41093
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+[Parent 10504, IPC I/O Parent] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-BVyW0E/firefox-95.0.1+build2/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc:19
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1641575981816	geckodriver	INFO	Listening on 127.0.0.1:56889
+1641575981829	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileqcOVgB"
+1641575982653	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileqcOVgB/search.json.mozlz4", (void 0)))
+1641575984697	Marionette	INFO	Listening on port 46257
+1641575984760	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+JavaScript error: https://portal.horizon3ai.com/static/js/6.fa25d29b.chunk.js, line 2: Error: Minified React error #40; visit https://reactjs.org/docs/error-decoder.html?invariant=40 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1641578353122	geckodriver	INFO	Listening on 127.0.0.1:39343
+1641578353157	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofile6FgDdC"
+1641578354329	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofile6FgDdC/search.json.mozlz4", (void 0)))
+1641578356455	Marionette	INFO	Listening on port 41797
+1641578357283	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1641579576604	geckodriver	INFO	Listening on 127.0.0.1:46557
+1641579577614	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileEGAx3X"
+1641579586639	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileEGAx3X/search.json.mozlz4", (void 0)))
+1641579592580	Marionette	INFO	Listening on port 33893
+1641579592790	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1641579634235	geckodriver	INFO	Listening on 127.0.0.1:52107
+1641579634241	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofiledD3h1M"
+1641579635001	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofiledD3h1M/search.json.mozlz4", (void 0)))
+1641579636679	Marionette	INFO	Listening on port 42005
+1641579636807	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+JavaScript error: resource://gre/actors/AutoCompleteChild.jsm, line 125: Error: Invalid autocomplete selectedIndex
+JavaScript error: resource://gre/actors/AutoCompleteChild.jsm, line 125: Error: Invalid autocomplete selectedIndex
+JavaScript error: resource://gre/modules/LoginManagerChild.jsm, line 194: NS_ERROR_XPC_JAVASCRIPT_ERROR_WITH_DETAILS: [JavaScript Error: "Invalid autocomplete selectedIndex" {file: "resource://gre/actors/AutoCompleteChild.jsm" line: 125}]'[JavaScript Error: "Invalid autocomplete selectedIndex" {file: "resource://gre/actors/AutoCompleteChild.jsm" line: 125}]' when calling method: [nsIAutoCompletePopup::selectedIndex]
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1641579950486	geckodriver	INFO	Listening on 127.0.0.1:48937
+1641579950523	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileJpu30E"
+1641579951254	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileJpu30E/search.json.mozlz4", (void 0)))
+1641579953289	Marionette	INFO	Listening on port 43769
+1641579953369	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641580980433	geckodriver	INFO	Listening on 127.0.0.1:60901
+1641580980439	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofilegIlOrE"
+1641580981482	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilegIlOrE/search.json.mozlz4", (void 0)))
+1641580984586	Marionette	INFO	Listening on port 34813
+1641580984719	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+1641580988449	Marionette	INFO	Stopped listening on port 43769
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+[Parent 20620, IPC I/O Parent] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-BVyW0E/firefox-95.0.1+build2/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc:19
+1641580989583	Marionette	INFO	Stopped listening on port 34813
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+[Parent 24401, IPC I/O Parent] WARNING: FileDescriptorSet destroyed with unconsumed descriptors: file /build/firefox-BVyW0E/firefox-95.0.1+build2/ipc/chromium/src/chrome/common/file_descriptor_set_posix.cc:19
+JavaScript error: chrome://remote/content/marionette/cert.js, line 55: NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsICertOverrideService.setDisableAllSecurityChecksAndLetAttackersInterceptMyData]
+1641581194146	geckodriver	INFO	Listening on 127.0.0.1:41183
+1641581194155	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileOmhelD"
+1641581194880	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileOmhelD/search.json.mozlz4", (void 0)))
+1641581197071	Marionette	INFO	Listening on port 35029
+1641581197221	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+1641581304576	geckodriver	INFO	Listening on 127.0.0.1:33551
+1641581304581	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileA4MlVf"
+1641581305339	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileA4MlVf/search.json.mozlz4", (void 0)))
+1641581307320	Marionette	INFO	Listening on port 33559
+1641581307475	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+1641581791731	Marionette	INFO	Stopped listening on port 33559
+console.warn: TopSitesFeed: Failed to fetch data from Contile server: NetworkError when attempting to fetch resource.
+1641581792611	geckodriver	INFO	Listening on 127.0.0.1:50547
+1641581792616	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-no-remote" "-profile" "/tmp/rust_mozprofileYE2DVc"
+1641581793374	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileYE2DVc/search.json.mozlz4", (void 0)))
+1641581795526	Marionette	INFO	Listening on port 33235
+1641581795551	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+JavaScript warning: https://realtime.getbeamer.com/socket.io/socket.io.min.js, line 0: https://realtime.getbeamer.com/socket.io/socket.io.min.js is being assigned a //# sourceMappingURL, but already has one
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
