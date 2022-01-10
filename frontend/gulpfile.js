@@ -15,7 +15,7 @@ const gulpSass = require("gulp-sass");
 const sass = gulpSass(dartSass);
 
 // Settings
-const MODE = "development";
+const MODE = "production";
 
 // Constants
 const NODE_MODULES = "./node_modules/";

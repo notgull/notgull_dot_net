@@ -1,5 +1,6 @@
 hostname = "127.0.0.1"
 port = 8199
+http_port = 8198
 template_path = "templates"
 favicon_path = "favicon.ico"
 csrf_key = "We spent so much time chasing suns, we lost sight..."

@@ -43,3 +43,7 @@ warp = { version = "0.3.2", features = ["tls"] }
 [dev-dependencies]
 multipart = "0.18.0"
 percent-encoding = "2.1.0"
+
+[profile.release]
+codegen-units = 1
+lto = "fat"

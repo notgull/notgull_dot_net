@@ -1,6 +1,7 @@
 // GNU AGPL v3 License
 
 use crate::Config;
+use futures_util::future;
 use std::{convert::Infallible, io::Error};
 use tokio::{
     fs::File,
@@ -22,14 +23,17 @@ pub async fn serve(
     cert_file.read_to_end(&mut cert_data).await?;
 
     // set up initial server configuration
-    let service = warp::serve(filter)
+    let http_service = warp::serve(filter.clone())
+        .run((cfg.hostname, cfg.http_port));
+        
+    let https_service = warp::serve(filter)
         .tls()
         .cert(cert_data)
         .key(key_data)
         .run((cfg.hostname, cfg.port));
 
     // run the server
-    service.await;
+    future::join(http_service, https_service).await;
 
     Ok(())
 }

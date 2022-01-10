@@ -16,6 +16,7 @@ use tokio::{
 pub struct Config {
     pub hostname: IpAddr,
     pub port: u16,
+    pub http_port: u16,
     pub template_path: PathBuf,
     pub csrf_key: CString,
     pub favicon_path: PathBuf,
